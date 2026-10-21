@@ -1,1 +1,15 @@
-{"name":"sesubasta-prototipo-dinamico","version":"4.0.0","private":true,"scripts":{"dev":"PORT=4173 HOST=0.0.0.0 node server.cjs","start":"node server.cjs","test":"node --test pruebas.cjs pruebas-servidor.cjs","build":"node build.cjs"},"engines":{"node":">=20"}}
+{
+  "name": "sesubasta-prototipo-dinamico",
+  "version": "4.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.cjs",
+    "dev": "SESUBASTA_DEV=1 node server.cjs",
+    "build": "node build.cjs",
+    "test": "node --test pruebas.cjs pruebas-servidor.cjs",
+    "reiniciar-datos": "node -e \"require('fs').rmSync('runtime-data',{recursive:true,force:true});console.log('Datos de prueba eliminados. Se crearán de nuevo al iniciar.')\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

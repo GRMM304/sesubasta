@@ -1,3 +1,39 @@
-<!doctype html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SeSubasta · Revisar tamaños</title><style>body{margin:0;background:#e8e6ee;font:14px Arial,sans-serif;color:#0e013d}header{position:sticky;top:0;padding:16px 24px;background:white;display:flex;gap:20px;align-items:center;z-index:2;flex-wrap:wrap}select,a{padding:10px;color:#0e013d}main{padding:24px;overflow:auto}iframe{width:390px;height:820px;border:0;display:block;background:white;border-radius:16px;box-shadow:0 10px 30px #0e013d22;margin:0 auto}small{color:#4a4470}</style>  <link rel="icon" type="image/png" href="assets/marca/favicon-sesubasta.png?v=1">
-  <link rel="apple-touch-icon" href="assets/marca/favicon-sesubasta.png?v=1">
-</head><body><header><strong>SeSubasta · Un mismo sitio</strong><label>Ancho de prueba <select id="width" onchange="document.getElementById('site').style.width=this.value+'px'"><option>320</option><option selected>390</option><option>430</option><option>768</option><option>1024</option><option>1440</option><option>1920</option></select></label><a href="index.html">Abrir sitio a pantalla completa</a><small>Cambia el ancho durante un formulario para comprobar que conserva el contenido.</small></header><main><iframe id="site" title="Aplicación SeSubasta responsive" src="index.html"></iframe></main></body></html>
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>SeSubasta · Revisar tamaños</title>
+<link rel="icon" type="image/png" href="assets/marca/favicon-sesubasta.png">
+<link rel="apple-touch-icon" href="assets/marca/favicon-sesubasta.png">
+<style>
+ body{margin:0;background:#e8e6ee;font:14px Montserrat,Arial,sans-serif;color:#0e013d}
+ header{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:14px 20px;background:#fff;border-bottom:1px solid #ddd}
+ label{display:flex;gap:8px;align-items:center;font-weight:600}
+ select,input,button,a.btn{min-height:40px;border:1px solid #cfcae0;border-radius:10px;padding:0 10px;background:#fff;color:#0e013d;font:inherit}
+ input{min-width:260px}
+ main{padding:20px;overflow:auto}
+ iframe{display:block;margin:0 auto;border:0;background:#fff;border-radius:16px;box-shadow:0 10px 30px #0e013d22;height:820px;width:390px}
+ small{color:#4a4470}
+</style>
+</head>
+<body>
+<header>
+ <strong>SeSubasta · un mismo sitio responsive</strong>
+ <label>Ancho <select id="width"><option>320</option><option selected>390</option><option>430</option><option>768</option><option>1024</option><option>1440</option><option>1920</option></select></label>
+ <label>Orientación <select id="orient"><option value="v">Vertical</option><option value="h">Horizontal</option></select></label>
+ <label>Ruta <input id="path" value="/remates"></label>
+ <button id="go">Abrir</button>
+ <small>Cambia el ancho con un formulario a medio llenar: el texto escrito se conserva y nada se envía solo.</small>
+</header>
+<main><iframe id="site" title="Aplicación SeSubasta responsive"></iframe></main>
+<script>
+ const file=location.protocol==='file:';const f=document.getElementById('site');
+ const src=p=>file?'index.html#'+p:p;
+ function size(){const w=Number(width.value),h=orient.value==='v'?(w<768?820:900):(w<768?Math.round(w*0.55)+200:700);f.style.width=w+'px';f.style.height=h+'px'}
+ width.onchange=orient.onchange=size;go.onclick=()=>{f.src=src(path.value||'/')};
+ size();f.src=src(path.value);
+</script>
+</body>
+</html>
