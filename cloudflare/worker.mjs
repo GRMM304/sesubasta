@@ -17,7 +17,7 @@ import {migrate} from '../servidor/migracion.cjs';
 import S from '../servidor/seguridad.cjs';
 globalThis.Buffer??=Buffer;
 
-const ENV_KEYS=['DEMO_LIVE_MINUTES','SITE_URL','RESEND_API_KEY','MAIL_FROM','WHATSAPP_TOKEN','WHATSAPP_PHONE_ID','WHATSAPP_TEMPLATE','WHATSAPP_LANG','SCRYPT_N','SESUBASTA_MODE'];
+const ENV_KEYS=['DEMO_LIVE_MINUTES','SITE_URL','BREVO_API_KEY','RESEND_API_KEY','MAIL_FROM','WHATSAPP_TOKEN','WHATSAPP_PHONE_ID','WHATSAPP_TEMPLATE','WHATSAPP_LANG','SCRYPT_N','SESUBASTA_MODE'];
 const ip=request=>request.headers.get('cf-connecting-ip')||'cf';
 
 export class SeSubastaApp extends DurableObject{

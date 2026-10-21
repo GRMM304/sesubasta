@@ -346,7 +346,7 @@ function createApi({store,engine,limiter,broadcast,viewers,local=true,realtime='
  route('GET','/api/v1/admin/audit',ctx=>{staff(ctx,'general_admin');let rows=db().audit.slice().reverse();if(ctx.query.entity)rows=rows.filter(a=>a.entity===ctx.query.entity);const q=str(ctx.query.q,80).toLowerCase();const users=db().users;const out=rows.map(a=>({...a,actor:users.find(u=>u.id===a.actorId)?.name||'Sistema'})).filter(a=>!q||(a.action+a.actor+a.entityId).toLowerCase().includes(q));return {items:out.slice(0,300)}});
 
  /* ---------- local-only developer mailbox ---------- */
- route('GET','/api/v1/dev/mail',()=>{if(!local)fail(404,'NOT_FOUND','Ruta no disponible.');return {items:db().mail.slice(0,100).map(m=>({...m,html:D.renderMail(m).html})),provider:process.env.RESEND_API_KEY&&process.env.MAIL_FROM?'resend':'local'}});
+ route('GET','/api/v1/dev/mail',()=>{if(!local)fail(404,'NOT_FOUND','Ruta no disponible.');return {items:db().mail.slice(0,100).map(m=>({...m,html:D.renderMail(m).html})),provider:Mail.provider()||'local'}});
 
  /* ---------- alertas de interés (nuevas propiedades, guardadas, inicio y cierre, blog) ---------- */
  const fmtCL=t=>new Date(t).toLocaleString('es-CL',{timeZone:'America/Santiago',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});

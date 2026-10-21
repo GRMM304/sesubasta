@@ -7,6 +7,6 @@
   "assets": { "directory": "./dist", "binding": "ASSETS", "run_worker_first": true },
   "durable_objects": { "bindings": [{ "name": "APP", "class_name": "SeSubastaApp" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SeSubastaApp"] }],
-  "vars": { "SCRYPT_N": "4096", "DEMO_LIVE_MINUTES": "4320", "DATA_VERSION": "2" },
+  "vars": { "SCRYPT_N": "4096", "DEMO_LIVE_MINUTES": "4320", "DATA_VERSION": "2", "SITE_URL": "https://sesubasta-remates.sesubasta-prototipo-dinamico.workers.dev" },
   "observability": { "enabled": true }
 }
