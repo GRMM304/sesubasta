@@ -1,0 +1,1 @@
+{"name":"sesubasta-prototipo-dinamico","version":"4.0.0","private":true,"scripts":{"dev":"PORT=4173 HOST=0.0.0.0 node server.cjs","start":"node server.cjs","test":"node --test pruebas.cjs pruebas-servidor.cjs","build":"node build.cjs"},"engines":{"node":">=20"}}
