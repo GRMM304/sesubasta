@@ -77,3 +77,34 @@ test('suspensión con motivo bloquea montos; SEO y rutas privadas con noindex',a
  const home=await (await fetch(base+'/')).text();assert(home.includes('application/ld+json')&&home.includes('rel="canonical"'));
  assert.equal((await fetch(base+'/remates/no-existe')).status,404);
 });
+
+test('alertas por correo: superación, nueva propiedad, recordatorio de cierre, preferencias y baja con un clic',async()=>{
+ const mailsTo=to=>store.data.mail.filter(m=>m.to===to);
+ const alex=client(),camila=client();await alex('POST','/api/v1/auth/login',{email:'alex@comprador.demo.cl',password:'Demo2026!'});await camila('POST','/api/v1/auth/login',{email:'camila@comprador.demo.cl',password:'Demo2026!'});
+ const bid=async(c,id,key)=>{const s=engine.snapshot(id);return c('POST',`/api/v1/auctions/${id}/bids`,{amountMinor:s.nextMinor,unit:'UF',termsVersion:s.termsVersion,key,expectedVersion:s.version})};
+ assert.equal((await bid(alex,2,'alert_a1')).status,200);const before=mailsTo('alex@comprador.demo.cl').length;
+ assert.equal((await bid(camila,2,'alert_c1')).status,200);
+ const outbid=mailsTo('alex@comprador.demo.cl').find(m=>m.subject==='Tu monto fue superado');assert(outbid,'Alex recibe el aviso de superación');assert(outbid.html.includes('Volver a subastar')&&outbid.unsubscribeUrl.includes('/cancelar-alertas'));
+ assert(mailsTo('camila@comprador.demo.cl').some(m=>m.subject.startsWith('Monto aceptado')),'Camila recibe su comprobante');
+ assert(store.data.mail.every(m=>!/\d+\.\d{2}|amountMinor/.test(m.unsubscribeUrl||'')));
+ // Alex tiene activadas las alertas de nuevas propiedades: se le avisa al publicar una ficha nueva.
+ const admin=client();await admin('POST','/api/v1/admin/auth/login',{email:'admin@demo.cl',password:'Demo2026!'});const code=store.data.mail.find(m=>m.to==='admin@demo.cl'&&m.subject.includes('código')).body.match(/\d{6}/)[0];await admin('POST','/api/v1/admin/auth/mfa/verify',{code});
+ const pending=store.data.properties.find(p=>p.id===21);assert.equal(pending.reviewStatus,'in_review');
+ const ok=await admin('POST','/api/v1/admin/reviews/21/decision',{action:'approve',checklist:{titular:true,antecedentes:true,fotos:true,datos:true,reglas:true}});assert.equal(ok.status,200);
+ assert(mailsTo('alex@comprador.demo.cl').some(m=>m.subject.startsWith('Nueva propiedad en subasta')&&m.category==='new'),'alerta de nueva propiedad');
+ assert(!mailsTo('camila@comprador.demo.cl').some(m=>m.subject.startsWith('Nueva propiedad')),'Camila no activó esas alertas');
+ // Baja con un clic: el enlace firmado desactiva solo esa categoría.
+ const link=new URL(outbid.unsubscribeUrl);const q=Object.fromEntries(link.searchParams);
+ assert.equal((await client()('POST','/api/v1/alerts/unsubscribe',{...q,t:'falso'})).status,400);
+ assert.equal((await client()('POST','/api/v1/alerts/unsubscribe',q)).status,200);
+ const u=store.data.users.find(x=>x.id==='alex');assert.equal(u.prefs.notifyEmail,false);assert.equal(u.prefs.alertsNew,true);
+ const n=mailsTo('alex@comprador.demo.cl').length;assert.equal((await bid(alex,2,'alert_a2')).status,200);assert.equal((await bid(camila,2,'alert_c2')).status,200);
+ assert.equal(mailsTo('alex@comprador.demo.cl').length,n,'sin correo tras la baja');assert(store.data.notifications.some(x=>x.userId==='alex'&&x.type==='outbid'),'la notificación en la app se mantiene');
+ // Recordatorio de cierre a 10 minutos: una sola vez por subasta.
+ const a=engine.state.auctions['6'];a.end=Date.now()+5*60000;store.data.saved.push({userId:'camila',propertyId:6,at:Date.now()});
+ const api=require('./servidor/api.cjs');void api;
+ await new Promise(r=>setTimeout(r,1300));
+ const reminders=mailsTo('camila@comprador.demo.cl').filter(m=>m.subject.startsWith('Cierra en 10 minutos'));assert.equal(reminders.length,1);
+ await new Promise(r=>setTimeout(r,1200));assert.equal(mailsTo('camila@comprador.demo.cl').filter(m=>m.subject.startsWith('Cierra en 10 minutos')).length,1,'no se repite');
+ assert(store.data.mail.filter(m=>m.status==='local').length>0,'la bandeja de salida entrega localmente');
+});

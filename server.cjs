@@ -7,6 +7,7 @@ const {createApi,HttpError}=require('./servidor/api.cjs');
 const {createSeo}=require('./servidor/seo.cjs');
 const S=require('./servidor/seguridad.cjs');
 const D=require('./servidor/dominio.cjs');
+const Mail=require('./servidor/correo.cjs');
 
 const ROOT=__dirname;
 const DATA=process.env.SESUBASTA_DATA?path.resolve(process.env.SESUBASTA_DATA):path.join(ROOT,'runtime-data','datos.json');
@@ -34,7 +35,7 @@ function sendFile(res,file,{mime,name,inline=true,cache='no-cache',noindex=false
 
 const server=http.createServer(async(req,res)=>{const requestId=crypto.randomUUID();let url;try{url=new URL(req.url,'http://localhost')}catch{return json(res,400,{code:'BAD_REQUEST',message:'Dirección no válida.'})}
  let pathname;try{pathname=decodeURIComponent(url.pathname)}catch{return json(res,400,{code:'BAD_REQUEST',message:'Dirección no válida.'})}
- const proto=req.headers['x-forwarded-proto']==='https'?'https':'http';const base=process.env.SITE_URL||`${proto}://${req.headers.host}`;
+ const proto=req.headers['x-forwarded-proto']==='https'?'https':'http';const base=process.env.SITE_URL||`${proto}://${req.headers.host}`;Mail.setBase(base);
  const cookies=[];
  const ctx={req,res,method:req.method,path:pathname,query:Object.fromEntries(url.searchParams),cookies:S.parseCookies(req.headers.cookie),ip:req.socket.remoteAddress||'local',secure:proto==='https',origin:base,requestId,setCookie:c=>cookies.push(c),
   readBody:async max=>{let size=0;const chunks=[];for await(const c of req){size+=c.length;if(size>max)throw new HttpError(413,'TOO_LARGE','La solicitud es demasiado grande.');chunks.push(c)}const text=Buffer.concat(chunks).toString('utf8');if(!text)return {};try{const v=JSON.parse(text);if(!v||typeof v!=='object'||Array.isArray(v))throw 0;return v}catch{throw new HttpError(400,'VALIDATION_ERROR','Solicitud no válida.')}}};

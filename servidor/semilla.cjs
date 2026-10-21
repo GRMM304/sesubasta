@@ -142,14 +142,14 @@ No prometemos precio, plazo ni resultado.`}
 function seedData(store){
  const now=Date.now(),rows=require('../fuentes/propiedades.json');
  const pass=hashPassword('Demo2026!');
- const user=(id,email,name,type,roles,extra={})=>({id,email,emailNorm:email,name,phone:'',accountType:type,status:'active',emailVerifiedAt:now,passHash:pass,roles,mfa:roles.includes('general_admin'),prefs:{marketing:false,notifyEmail:true},termsVersion:type==='public'?TERMS_VERSION:null,createdAt:now,updatedAt:now,demo:true,...extra});
+ const user=(id,email,name,type,roles,extra={})=>({id,email,emailNorm:email,name,phone:'',accountType:type,status:'active',emailVerifiedAt:now,passHash:pass,roles,mfa:roles.includes('general_admin'),prefs:{marketing:false,notifyEmail:true,alertsSaved:true,alertsNew:false,alertsNews:false,alertRegions:[],alertTypes:[]},termsVersion:type==='public'?TERMS_VERSION:null,createdAt:now,updatedAt:now,demo:true,...extra});
  const users=[
   user('usr_admin','admin@demo.cl','Administración Demo','internal',['general_admin']),
   user('usr_legal','legal@demo.cl','Legal Demo','internal',['legal']),
   user('usr_colab','colaborador@demo.cl','Colaborador Demo','internal',['internal_contributor']),
   user('usr_editor','editor@demo.cl','Editor Demo','internal',['content_editor']),
   user('usr_oper','operador@demo.cl','Operador Demo','internal',['operator']),
-  user('alex','alex@comprador.demo.cl','Alex Demo','public',['buyer'],{demoProfile:'alex'}),
+  user('alex','alex@comprador.demo.cl','Alex Demo','public',['buyer'],{demoProfile:'alex',prefs:{marketing:true,notifyEmail:true,alertsSaved:true,alertsNew:true,alertsNews:true,alertRegions:[],alertTypes:[]}}),
   user('camila','camila@comprador.demo.cl','Camila Demo','public',['buyer'],{demoProfile:'camila'})
  ];
  const byType={};rows.forEach(r=>{(byType[r.type]=byType[r.type]||[]).push(r.image)});

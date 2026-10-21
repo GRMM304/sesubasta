@@ -45,6 +45,32 @@ En `/ingresar` también hay botones "Entrar como Alex" y "Entrar como Camila". P
 - **Operación:** el operador abre el monitor de una subasta, la suspende con motivo (los montos se rechazan de inmediato) y el Administrador la reanuda con una nueva fecha. En la subasta cerrada de La Florida se confirma el resultado preliminar o se registra un incumplimiento.
 - **Vender:** completa el formulario de 6 pasos en "Ingresa tu inmueble". La solicitud llega a Solicitudes del equipo y nunca se publica sola.
 
+## Avisos y alertas por correo
+
+Cada aviso aparece en Notificaciones (la campana) y, según las preferencias de la persona, también llega por correo con el diseño de SeSubasta.
+
+| Para quién | Avisos |
+|---|---|
+| Quien subasta | Comprobante de cada monto aceptado, "tu monto fue superado" (agrupado para no saturar), "cierra en 1 hora", "cierra en 10 minutos" (indica si vas primero o te superaron), suspensión, reanudación con nueva fecha, cancelación, resultado al cierre y confirmación de la adjudicación |
+| Quien guardó una propiedad | Empieza en menos de 1 hora, comenzó la subasta, está por cerrar, y cambios de fechas o condiciones |
+| Alertas de nuevas propiedades (opcional) | Una alerta al publicarse cada propiedad, con filtro opcional por región y tipo |
+| Novedades del blog (opcional) | Una alerta al publicarse cada artículo |
+| Cuenta (siempre) | Verificación de correo, recuperación y cambio de contraseña, solicitud de eliminación |
+| Equipo | Nueva solicitud (operador), ficha enviada a revisión (Administrador general), asignación de expediente (Legal), decisión de publicación (creador de la ficha) y resultado por confirmar al cierre (operador) |
+
+- Cada persona elige qué recibir en **Mi cuenta → Perfil y privacidad → Avisos y alertas por correo**.
+- Cada correo trae un enlace de **dejar de recibir** que desactiva solo esa categoría, sin iniciar sesión.
+- Los correos se guardan primero en una bandeja de salida y luego se entregan.
+- Sin proveedor configurado, quedan en `/dev/correos`, donde puedes ver cada uno con su diseño.
+
+**Envío real:** crea una cuenta en Resend (resend.com), verifica el dominio remitente y arranca el servidor con estas variables:
+
+```
+RESEND_API_KEY=re_xxxxxxxx MAIL_FROM="SeSubasta <avisos@sesubasta.cl>" SITE_URL=https://remates.sesubasta.cl npm start
+```
+
+Si el proveedor falla, el mensaje se reintenta hasta 3 veces. Cada correo incluye la cabecera List-Unsubscribe para la baja con un clic en Gmail y Outlook.
+
 ## Google Analytics 4
 
 Ya está etiquetado. Basta con pegar el ID de medición `G-XXXXXXXXXX` en Gestión → Configuración (Administrador general). La etiqueta solo se carga si la persona acepta las cookies de analítica (Consent Mode v2), y nunca se envían montos ni datos personales. El detalle de eventos y la configuración recomendada están en `docs/plan-de-medicion.md`.
@@ -69,14 +95,14 @@ Al abrir `index.html` con doble clic puedes recorrer el inicio, el catálogo, la
 | `fuentes/plantilla.html` | Plantilla de `index.html` |
 | `docs/` | Plan de medición |
 
-Después de editar algo en `fuentes/`, ejecuta `npm run build` para regenerar `index.html`. Para verificar, ejecuta `npm test`: son 12 pruebas del motor, permisos, MFA, publicación, privacidad de documentos, suspensión y SEO.
+Después de editar algo en `fuentes/`, ejecuta `npm run build` para regenerar `index.html`. Para verificar, ejecuta `npm test`: son 13 pruebas del motor, permisos, MFA, publicación, privacidad de documentos, suspensión, SEO y alertas por correo.
 
 ## Lo que sigue siendo de demostración
 
 El servidor local reproduce las reglas del requerimiento, pero **no es producción** y no debe publicarse en internet.
 
 - Los datos se guardan en un archivo JSON. En producción irían en Cloudflare D1, R2 y un Durable Object por subasta.
-- Los correos se simulan en `/dev/correos`.
+- Los correos se simulan en `/dev/correos`, salvo que configures el proveedor (ver Avisos y alertas por correo).
 - La UF es un valor ficticio de $40.000, rotulado como tal.
 - Los textos legales y las bases son borradores pendientes de aprobación.
 - Las imágenes son ilustrativas.

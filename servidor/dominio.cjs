@@ -14,11 +14,21 @@ function publicFields(p){return {id:p.id,publicId:p.publicId,slug:p.slug,title:p
 function livePublic(p){if(p.publicStatus!=='published'||!p.live)return null;const v={...p.live};v.media=v.media.map(m=>({...m,url:mediaUrl(m.key)}));return v}
 
 function audit(db,actor,action,entity,entityId,changes={},requestId=''){db.audit.push({id:id('aud'),actorId:actor||null,action,entity,entityId:String(entityId),changes,at:Date.now(),requestId});if(db.audit.length>20000)db.audit.splice(0,db.audit.length-20000)}
-function mail(db,{to,subject,body,link}){db.mail.unshift({id:id('mail'),to,subject,body,link:link||'',at:Date.now()});if(db.mail.length>500)db.mail.length=500}
-/* Outbid alerts are grouped: an unread alert for the same auction is refreshed instead of duplicated. */
-function notify(db,userId,{type,title,body,link,group}){const u=db.users.find(x=>x.id===userId);if(!u||u.status==='deleted')return;if(group){const prev=db.notifications.find(n=>n.userId===userId&&n.group===group&&!n.readAt);if(prev){Object.assign(prev,{title,body,link,at:Date.now(),count:(prev.count||1)+1});return}}
- db.notifications.unshift({id:id('ntf'),userId,type,title,body,link,group:group||null,at:Date.now(),readAt:null,channel:'app'});if(db.notifications.length>5000)db.notifications.length=5000;
- if(u.prefs?.notifyEmail!==false||['security','account'].includes(type))mail(db,{to:u.email,subject:title,body,link})}
+const Mail=require('./correo.cjs');
+const TYPE_CATEGORY={bid:'auction',outbid:'auction',result:'auction',incident:'auction',auction:'auction',closing:'auction',saved:'saved',new_property:'new',news:'news',security:'account',account:'account',staff:'staff'};
+const PREF_FOR={auction:'notifyEmail',saved:'alertsSaved',new:'alertsNew',news:'alertsNews'};
+/* Preferencias por categoría. Los mensajes de cuenta y seguridad siempre se envían. */
+function wantsEmail(u,category){const k=PREF_FOR[category];if(!k)return true;const prefs=u.prefs||{};if(k==='notifyEmail')return prefs.notifyEmail!==false;if(k==='alertsSaved')return prefs.alertsSaved!==false;return prefs[k]===true}
+/* Bandeja de salida: el mensaje se guarda dentro de la misma transacción y se entrega después. */
+function mail(db,{to,subject,body,link,cta,category='account',userId=null}){const unsubscribeUrl=userId&&PREF_FOR[category]?Mail.abs(`/cancelar-alertas?u=${encodeURIComponent(userId)}&c=${category}&t=${Mail.unsubToken(db,userId,category)}`):'';const {html,text}=Mail.render({title:subject,body,link,cta,category,unsubscribeUrl});
+ db.mail.unshift({id:id('mail'),to,subject,body,link:link||'',cta:cta||'',category,userId,html,text,unsubscribeUrl,status:'queued',tries:0,at:Date.now()});if(db.mail.length>800)db.mail.length=800}
+/* Notificación en la app y, según preferencias, por correo. Las alertas con `group` se agrupan mientras no se lean. */
+function notify(db,userId,{type,title,body,link,group,category,cta}){const u=db.users.find(x=>x.id===userId);if(!u||u.status==='deleted'||u.status==='blocked')return;const cat=category||TYPE_CATEGORY[type]||'account';
+ if(group){const prev=db.notifications.find(n=>n.userId===userId&&n.group===group&&!n.readAt);if(prev){Object.assign(prev,{title,body,link,at:Date.now(),count:(prev.count||1)+1});return}}
+ db.notifications.unshift({id:id('ntf'),userId,type,category:cat,title,body,link,group:group||null,at:Date.now(),readAt:null,channel:'app'});if(db.notifications.length>8000)db.notifications.length=8000;
+ if(wantsEmail(u,cat))mail(db,{to:u.email,subject:title,body,link,cta,category:cat,userId:u.id})}
+/* Avisos internos al equipo según rol (nuevas solicitudes, revisiones, resultados por confirmar). */
+function notifyStaff(db,roles,{title,body,link}){db.users.filter(u=>u.accountType==='internal'&&u.status==='active'&&roles.some(r=>u.roles.includes(r)||u.roles.includes('general_admin'))).forEach(u=>mail(db,{to:u.email,subject:title,body,link,cta:'Abrir en gestión',category:'staff'}))}
 
 function publicUser(u){return u&&{id:u.id,email:u.email,name:u.name,phone:u.phone||'',accountType:u.accountType,status:u.status,emailVerified:!!u.emailVerifiedAt,roles:u.roles,roleLabels:u.roles.map(r=>ROLE_LABELS[r]||r),prefs:u.prefs||{},termsVersion:u.termsVersion||null,mfa:!!u.mfa,demoProfile:u.demoProfile||null,deletionRequestedAt:u.deletionRequestedAt||null}}
 
@@ -27,4 +37,4 @@ function completeness(p){const general=[['Título',p.title],['Tipo',p.type],['Co
  const legal=[['Antecedentes legales cargados',(p.documents||[]).some(d=>d.visibility==='private'||d.type==='Antecedente legal')],['Observación legal',!!(p.legalNotes&&p.legalNotes.length>=5)],['Bloque legal marcado como completo',!!p.legalComplete]];
  const missing=[...general,...legal].filter(([,ok])=>!ok).map(([n])=>n);return {general:general.map(([n,ok])=>({name:n,ok:!!ok})),legal:legal.map(([n,ok])=>({name:n,ok:!!ok})),missing,ready:!missing.length}}
 
-module.exports={ROLE_LABELS,INTERNAL_ROLES,has,mediaUrl,publicFields,livePublic,audit,mail,notify,publicUser,completeness};
+module.exports={wantsEmail,notifyStaff,TYPE_CATEGORY,ROLE_LABELS,INTERNAL_ROLES,has,mediaUrl,publicFields,livePublic,audit,mail,notify,publicUser,completeness};
