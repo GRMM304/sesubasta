@@ -153,7 +153,8 @@ function seedData(store){
   user('camila','camila@comprador.demo.cl','Camila Demo','public',['buyer'],{demoProfile:'camila'})
  ];
  const byType={};rows.forEach(r=>{(byType[r.type]=byType[r.type]||[]).push(r.image)});
- const subastas=seedAuctions(rows,now);
+ // En el sitio publicado las subastas en vivo de muestra duran más (DEMO_LIVE_MINUTES) para que el equipo alcance a probar.
+ const subastas=seedAuctions(rows,now,{liveMinutes:Number(process.env.DEMO_LIVE_MINUTES)||0});
  const properties=rows.map(r=>{const commune=r.location.split(',')[0].trim();const c=COMMUNES[commune]||{region:r.location.split(',')[1]?.trim()||'',lat:-33.45,lng:-70.66};
   const gallery=[r.image,...byType[r.type].filter(x=>x!==r.image)].slice(0,4);
   const docKey=`bases-${r.id}.pdf`;store.saveFile('publico',docKey,makePdf('Bases de la subasta - documento de demostracion',[`Propiedad ${r.title}`,'Mecanica: subasta ascendente continua con cierre fijo.','Incremento de muestra: 50 UF. Unidad contractual: UF.','Documento ficticio. No tiene validez legal.']));

@@ -17,7 +17,7 @@ import {migrate} from '../servidor/migracion.cjs';
 import S from '../servidor/seguridad.cjs';
 globalThis.Buffer??=Buffer;
 
-const ENV_KEYS=['SITE_URL','RESEND_API_KEY','MAIL_FROM','WHATSAPP_TOKEN','WHATSAPP_PHONE_ID','WHATSAPP_TEMPLATE','WHATSAPP_LANG','SCRYPT_N','SESUBASTA_MODE'];
+const ENV_KEYS=['DEMO_LIVE_MINUTES','SITE_URL','RESEND_API_KEY','MAIL_FROM','WHATSAPP_TOKEN','WHATSAPP_PHONE_ID','WHATSAPP_TEMPLATE','WHATSAPP_LANG','SCRYPT_N','SESUBASTA_MODE'];
 const ip=request=>request.headers.get('cf-connecting-ip')||'cf';
 
 export class SeSubastaApp extends DurableObject{
@@ -50,6 +50,7 @@ export default{
  async fetch(request,env,ctx){const url=new URL(request.url);
   const locked=await gate(request,env.SITE_PASSWORD,{ip:ip(request)});if(locked)return locked;
   if(url.pathname.startsWith('/assets/')||url.pathname==='/vista-responsive.html'){const r=await env.ASSETS.fetch(request);return noindex(r,env.SITE_PASSWORD)}
-  const app=env.APP.get(env.APP.idFromName('sesubasta'));
+  // Cambiar DATA_VERSION y volver a publicar reinicia los datos de prueba (crea un almacenamiento nuevo).
+  const app=env.APP.get(env.APP.idFromName('sesubasta-'+(env.DATA_VERSION||'1')));
   const response=await app.fetch(request);
   return response.status===101?response:noindex(response,env.SITE_PASSWORD)}};

@@ -3,8 +3,8 @@
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.AuctionCore=factory()})(typeof globalThis!=='undefined'?globalThis:this,function(){
 class AuctionError extends Error{constructor(code,message,status=409){super(message);this.code=code;this.status=status}}
 function minorAmount(text){const s=String(text).trim().replace(/\./g,(m,i,str)=>str.indexOf(',')>=0?'':m).replace(',','.');if(!/^\d{1,10}(\.\d{1,2})?$/.test(s))throw new AuctionError('AMOUNT_INVALID','Ingresa un monto positivo con hasta dos decimales.',422);const [a,b='']=s.split('.');const n=Number(a)*100+Number((b+'00').slice(0,2));if(!Number.isSafeInteger(n)||n<=0)throw new AuctionError('AMOUNT_INVALID','El monto no es válido.',422);return n}
-function auctionFrom(p,i,at){const active=p.condition==='En vivo';const start=active?at-60000:at+(i+1)*3600000;const end=active?at+(p.id===2?15:30)*60000:start+86400000;return {id:p.id,start,end,status:'scheduled',initialMinor:Math.round(p.minUF*100),currentMinor:Math.round(p.minUF*100),incrementMinor:5000,unit:'UF',termsVersion:'demo-2026-10-v4',version:0,sequence:0,bids:[],keys:{},events:[]}}
-function seed(rows,at=Date.now()){return {schema:2,auctions:Object.fromEntries(rows.map((p,i)=>[String(p.id),auctionFrom(p,i,at)]))}}
+function auctionFrom(p,i,at,o={}){const active=p.condition==='En vivo';const live=o.liveMinutes?[o.liveMinutes,o.liveMinutes+60]:[15,30];const start=active?at-60000:at+(i+1)*3600000;const end=active?at+(p.id===2?live[0]:live[1])*60000:start+86400000;return {id:p.id,start,end,status:'scheduled',initialMinor:Math.round(p.minUF*100),currentMinor:Math.round(p.minUF*100),incrementMinor:5000,unit:'UF',termsVersion:'demo-2026-10-v4',version:0,sequence:0,bids:[],keys:{},events:[]}}
+function seed(rows,at=Date.now(),o={}){return {schema:2,auctions:Object.fromEntries(rows.map((p,i)=>[String(p.id),auctionFrom(p,i,at,o)]))}}
 const clone=v=>JSON.parse(JSON.stringify(v));
 class Engine{
  constructor(state,{clock=()=>Date.now(),persist=()=>{}}={}){this.state=state;this.clock=clock;this.persist=persist}
