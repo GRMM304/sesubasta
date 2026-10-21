@@ -71,6 +71,8 @@ Para actualizar el sitio después de un cambio, vuelve a ejecutar `npm run cf:de
 
 **Contraseña de acceso:** mientras exista, todo el sitio (incluidos `/dev/correos` y `/admin-login`) pide esa contraseña y nadie lo indexa. Después, cada persona entra con su cuenta de prueba.
 
+**Sitio publicado:** https://sesubasta-remates.sesubasta-prototipo-dinamico.workers.dev. En ese sitio las subastas en vivo de muestra duran 3 días (`DEMO_LIVE_MINUTES`). Para reiniciar los datos de prueba, sube en 1 el valor `DATA_VERSION` de `wrangler.jsonc` y ejecuta `npm run cf:deploy`. Para cambiar la contraseña de acceso, usa `npm run cf:clave`.
+
 **Límites del plan gratuito** (sobran para un equipo de pruebas): 100.000 solicitudes diarias al Worker y al Durable Object, 5 GB de almacenamiento y 100.000 filas escritas al día.
 
 El servidor local también acepta `SITE_PASSWORD`, por ejemplo para compartirlo con un túnel.
