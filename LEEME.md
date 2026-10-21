@@ -13,6 +13,7 @@ Una sola aplicación web responsive para remates.sesubasta.cl. Escritorio, table
 | Sitio público | `http://127.0.0.1:8080` |
 | Acceso del equipo (sin enlace público) | `http://127.0.0.1:8080/admin-login` |
 | Correos de prueba (verificación, recuperación, código MFA, avisos) | `http://127.0.0.1:8080/dev/correos` |
+| WhatsApp de prueba (tareas e invitaciones) | `http://127.0.0.1:8080/dev/whatsapp` |
 | Mapa de pantallas por ID del requerimiento | `http://127.0.0.1:8080/prototipo/pantallas` |
 | Revisión por ancho de pantalla | `http://127.0.0.1:8080/vista-responsive.html` |
 
@@ -44,6 +45,40 @@ En `/ingresar` también hay botones "Entrar como Alex" y "Entrar como Camila". P
   4. El Administrador general entra con su código, revisa el expediente, completa la lista de verificación y publica. La subasta queda programada.
 - **Operación:** el operador abre el monitor de una subasta, la suspende con motivo (los montos se rechazan de inmediato) y el Administrador la reanuda con una nueva fecha. En la subasta cerrada de La Florida se confirma el resultado preliminar o se registra un incumplimiento.
 - **Vender:** completa el formulario de 6 pasos en "Ingresa tu inmueble". La solicitud llega a Solicitudes del equipo y nunca se publica sola.
+
+## Equipo interno y tareas
+
+**Crear usuarios del equipo.** El Administrador general los crea en Gestión → Usuarios y roles, indicando:
+
+- nombre, correo, WhatsApp, cargo, área y notas internas;
+- uno o más roles: Administrador general, Legal, Colaborador, Operador de remates o Editor de contenido.
+
+La persona recibe por correo y por WhatsApp un enlace para activar su cuenta y crear su contraseña; vence en 72 horas. El Administrador también puede copiar el enlace, enviarlo con el botón de WhatsApp, reenviar la invitación y editar los datos.
+
+**Correo y WhatsApp obligatorios.** Cada integrante tiene correo y WhatsApp registrados. Si a alguien le falta el WhatsApp, el panel lo lleva a **Mi perfil** antes de dejarlo continuar. En Mi perfil cada persona actualiza su WhatsApp, elige si recibe las tareas por correo, por WhatsApp o por ambos, y cambia su contraseña.
+
+**Tareas** (Gestión → Tareas, o el botón "Asignar tarea" en fichas, expedientes, monitor de subastas, solicitudes y usuarios):
+
+- Cualquier integrante asigna una tarea a una o varias personas, con prioridad, fecha de vencimiento y, si quiere, un vínculo a la ficha o subasta.
+- El aviso sale por correo y por WhatsApp.
+- El responsable la marca "en curso" o "hecha", y quien la asignó recibe el aviso.
+- Hay comentarios con aviso, recordatorios manuales (máximo 3 por hora) y recordatorios automáticos 24 horas antes y al vencer.
+- La lista "Asignadas a mí" tiene un contador en el menú. El Administrador general ve todas las tareas; el resto solo las que creó o le asignaron.
+
+**Cómo sale el WhatsApp:**
+
+1. **Botón "WhatsApp a …"** (funciona hoy). Abre WhatsApp en tu teléfono o computador con el mensaje ya escrito; solo pulsas enviar. No requiere contratar nada.
+2. **Envío automático** con la API oficial de WhatsApp Business (Meta). Se activa iniciando el servidor con estas variables:
+
+```
+WHATSAPP_TOKEN=xxxx WHATSAPP_PHONE_ID=xxxx WHATSAPP_TEMPLATE=aviso_tarea npm start
+```
+
+Meta exige que los mensajes iniciados por la empresa usen una **plantilla aprobada**. Crea en Meta una plantilla llamada `aviso_tarea`, en español, con un parámetro de texto `{{1}}`.
+
+Mientras no esté conectado, los mensajes quedan en `http://127.0.0.1:8080/dev/whatsapp`, cada uno con su botón "Abrir en WhatsApp".
+
+Los números de prueba (+56 9 0000 000X) son ficticios. Cambia el tuyo en Mi perfil para probar con tu teléfono.
 
 ## Avisos y alertas por correo
 
@@ -95,7 +130,7 @@ Al abrir `index.html` con doble clic puedes recorrer el inicio, el catálogo, la
 | `fuentes/plantilla.html` | Plantilla de `index.html` |
 | `docs/` | Plan de medición |
 
-Después de editar algo en `fuentes/`, ejecuta `npm run build` para regenerar `index.html`. Para verificar, ejecuta `npm test`: son 13 pruebas del motor, permisos, MFA, publicación, privacidad de documentos, suspensión, SEO y alertas por correo.
+Después de editar algo en `fuentes/`, ejecuta `npm run build` para regenerar `index.html`. Para verificar, ejecuta `npm test`: son 14 pruebas del motor, permisos, MFA, publicación, privacidad de documentos, suspensión, SEO, alertas por correo, alta de usuarios y tareas.
 
 ## Lo que sigue siendo de demostración
 

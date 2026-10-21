@@ -108,3 +108,27 @@ test('alertas por correo: superación, nueva propiedad, recordatorio de cierre, 
  await new Promise(r=>setTimeout(r,1200));assert.equal(mailsTo('camila@comprador.demo.cl').filter(m=>m.subject.startsWith('Cierra en 10 minutos')).length,1,'no se repite');
  assert(store.data.mail.filter(m=>m.status==='local').length>0,'la bandeja de salida entrega localmente');
 });
+
+test('alta de usuarios del equipo con WhatsApp y tareas entre roles por correo y WhatsApp',async()=>{
+ const admin=client();await admin('POST','/api/v1/admin/auth/login',{email:'admin@demo.cl',password:'Demo2026!'});const code=store.data.mail.find(m=>m.to==='admin@demo.cl'&&m.subject.includes('código')).body.match(/\d{6}/)[0];await admin('POST','/api/v1/admin/auth/mfa/verify',{code});
+ const bad=await admin('POST','/api/v1/admin/users',{name:'Ana Nueva',email:'ana@sesubasta.cl',whatsapp:'123',position:'',roles:[]});assert.equal(bad.status,422);assert(bad.data.fields.whatsapp&&bad.data.fields.roles&&bad.data.fields.position);
+ const ok=await admin('POST','/api/v1/admin/users',{name:'Ana Nueva',email:'ana@sesubasta.cl',whatsapp:'9 8765 4321',position:'Ejecutiva comercial',area:'Comercial',roles:['internal_contributor','operator']});assert.equal(ok.status,200);
+ assert.equal(ok.data.user.whatsapp,'+56987654321');assert.deepEqual(ok.data.user.roles,['internal_contributor','operator']);assert.match(ok.data.whatsappLink,/^https:\/\/wa\.me\/56987654321\?text=/);
+ assert(store.data.mail.some(m=>m.to==='ana@sesubasta.cl'&&m.subject.includes('Invitación')));assert(store.data.whatsapp.some(m=>m.to==='+56987654321'&&m.kind==='invite'));
+ const colab=client(),legal=client(),editor=client();await colab('POST','/api/v1/admin/auth/login',{email:'colaborador@demo.cl',password:'Demo2026!'});await legal('POST','/api/v1/admin/auth/login',{email:'legal@demo.cl',password:'Demo2026!'});await editor('POST','/api/v1/admin/auth/login',{email:'editor@demo.cl',password:'Demo2026!'});
+ assert.equal((await colab('POST','/api/v1/admin/tasks',{title:'x',assignees:[]})).status,422);
+ const t=await colab('POST','/api/v1/admin/tasks',{title:'Cargar certificado de dominio',description:'Ficha SS-0021',assignees:['usr_legal'],priority:'alta',dueAt:Date.now()+3*3600000,link:{path:'/gestion/propiedades/21?tab=legal',label:'SS-0021'}});assert.equal(t.status,200);
+ const id=t.data.task.id;assert.deepEqual(t.data.sent.email,['Legal Demo']);assert.deepEqual(t.data.sent.whatsapp,['Legal Demo']);assert.match(t.data.sent.links[0].url,/wa\.me\/56900000002/);
+ assert(store.data.whatsapp.some(m=>m.taskId===id&&m.to==='+56900000002'&&m.text.includes('Cargar certificado')));
+ assert.equal((await editor('GET','/api/v1/admin/tasks/'+id)).status,404,'quien no participa no ve la tarea');
+ assert.equal((await client()('GET','/api/v1/admin/tasks')).status,401);
+ assert.equal((await legal('PATCH','/api/v1/admin/tasks/'+id,{status:'cancelled'})).status,403,'el responsable no cancela la tarea de otro');
+ const mailsBefore=store.data.mail.filter(m=>m.to==='colaborador@demo.cl').length;
+ assert.equal((await legal('POST',`/api/v1/admin/tasks/${id}/comments`,{text:'Lo subo hoy en la tarde'})).status,200);
+ assert.equal((await legal('PATCH','/api/v1/admin/tasks/'+id,{status:'done'})).status,200);
+ assert(store.data.mail.filter(m=>m.to==='colaborador@demo.cl').length>=mailsBefore+2,'quien asignó recibe comentario y cierre');
+ assert(store.data.whatsapp.some(m=>m.to==='+56900000003'&&m.text.includes('hecha')),'aviso de tarea hecha por WhatsApp');
+ const mine=await legal('GET','/api/v1/admin/tasks?scope=mine&status=done');assert(mine.data.items.some(x=>x.id===id));
+ const prof=await legal('PATCH','/api/v1/admin/me/profile',{name:'Legal Demo',whatsapp:'abc'});assert.equal(prof.status,422);
+ await new Promise(r=>setTimeout(r,1200));assert(store.data.whatsapp.filter(m=>m.status==='local').length>0,'la bandeja de WhatsApp procesa los mensajes');
+});
