@@ -35,13 +35,21 @@ ${url?`<p style="margin:0 0 22px"><a href="${e(url)}" style="display:inline-bloc
 
 /* Envío real opcional. Nunca se reintenta un mensaje ya entregado; los fallidos se reintentan hasta 3 veces. */
 /* Proveedor de envío: Brevo (BREVO_API_KEY) o Resend (RESEND_API_KEY), con remitente MAIL_FROM = "Nombre <correo>". */
-const provider=()=>process.env.MAIL_FROM&&(process.env.BREVO_API_KEY?'brevo':process.env.RESEND_API_KEY?'resend':null);
+/* El remitente se elige en Gestión → Configuración (config.mailFrom); MAIL_FROM del entorno queda como alternativa. */
+let configuredFrom='';const setFrom=v=>{configuredFrom=v||''};const fromValue=()=>configuredFrom||process.env.MAIL_FROM||'';
+const keyProvider=()=>process.env.BREVO_API_KEY?'brevo':process.env.RESEND_API_KEY?'resend':null;
+const provider=()=>fromValue()&&keyProvider();
 function parseFrom(v){const m=/^\s*(.*?)\s*<([^>]+)>\s*$/.exec(v||'');return m?{name:m[1]||'SeSubasta',email:m[2]}:{name:'SeSubasta',email:String(v||'').trim()}}
 async function deliver(msg){const p=provider();if(!p)return {status:'local'};
- if(p==='brevo'){const from=parseFrom(process.env.MAIL_FROM);const r=await fetch('https://api.brevo.com/v3/smtp/email',{method:'POST',headers:{'api-key':process.env.BREVO_API_KEY,'Content-Type':'application/json',accept:'application/json'},body:JSON.stringify({sender:from,to:[{email:msg.to}],subject:msg.subject,htmlContent:msg.html,textContent:msg.text,headers:{'X-Mailin-custom':'mail_id:'+msg.id,...(msg.unsubscribeUrl?{'List-Unsubscribe':`<${msg.unsubscribeUrl}>`,'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'}:{})},tags:[msg.category||'cuenta']})});if(!r.ok)throw Error('Brevo respondió '+r.status+': '+(await r.text()).slice(0,200));return {status:'sent'}}
- const key=process.env.RESEND_API_KEY,from=process.env.MAIL_FROM;
+ if(p==='brevo'){const from=parseFrom(fromValue());const r=await fetch('https://api.brevo.com/v3/smtp/email',{method:'POST',headers:{'api-key':process.env.BREVO_API_KEY,'Content-Type':'application/json',accept:'application/json'},body:JSON.stringify({sender:from,to:[{email:msg.to}],subject:msg.subject,htmlContent:msg.html,textContent:msg.text,headers:{'X-Mailin-custom':'mail_id:'+msg.id,...(msg.unsubscribeUrl?{'List-Unsubscribe':`<${msg.unsubscribeUrl}>`,'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'}:{})},tags:[msg.category||'cuenta']})});if(!r.ok)throw Error('Brevo respondió '+r.status+': '+(await r.text()).slice(0,200));return {status:'sent'}}
+ const key=process.env.RESEND_API_KEY,from=fromValue();
  const headers={Authorization:'Bearer '+key,'Content-Type':'application/json','Idempotency-Key':msg.id};
  const payload={from,to:[msg.to],subject:msg.subject,html:msg.html,text:msg.text,...(msg.unsubscribeUrl?{headers:{'List-Unsubscribe':`<${msg.unsubscribeUrl}>`,'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'}}:{})};
  const r=await fetch('https://api.resend.com/emails',{method:'POST',headers,body:JSON.stringify(payload)});if(!r.ok)throw Error('Proveedor de correo respondió '+r.status);return {status:'sent'}}
 
-module.exports={provider,CATEGORIES,render,deliver,unsubToken,verifyUnsub,setBase,abs};
+/* Estado de la cuenta de Brevo conectada: titular y remitentes verificados (sin exponer la clave). */
+async function brevoStatus(){const key=process.env.BREVO_API_KEY;if(!key)return {connected:false};const h={'api-key':key,accept:'application/json'};
+ const [acc,snd]=await Promise.all([fetch('https://api.brevo.com/v3/account',{headers:h}),fetch('https://api.brevo.com/v3/senders',{headers:h})]);
+ if(!acc.ok)return {connected:false,error:'Brevo rechazó la clave ('+acc.status+'). Revisa que esté bien copiada y activa.'};
+ const a=await acc.json(),s=snd.ok?await snd.json():{senders:[]};return {connected:true,account:a.email,company:a.companyName||'',senders:(s.senders||[]).map(x=>({name:x.name,email:x.email,active:!!x.active}))}}
+module.exports={setFrom,fromValue,keyProvider,brevoStatus,provider,CATEGORIES,render,deliver,unsubToken,verifyUnsub,setBase,abs};
