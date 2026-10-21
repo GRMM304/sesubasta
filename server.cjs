@@ -13,7 +13,7 @@ const ROOT=__dirname;
 const DATA=process.env.SESUBASTA_DATA?path.resolve(process.env.SESUBASTA_DATA):path.join(ROOT,'runtime-data','datos.json');
 const store=new Store(DATA).load(seedData);
 // Every published record keeps the approved public version separately from later private edits.
-store.tx(d=>{for(const p of d.properties)if(p.publicStatus==='published'&&!p.live)p.live=D.publicFields(p)});
+store.tx(d=>{for(const p of d.properties)if(p.publicStatus==='published'&&!p.live)p.live=D.publicFields(p);if(!d.config.social)d.config.social={instagram:'https://www.instagram.com/sesubasta.cl/',facebook:'https://www.facebook.com/sesubasta.cl',tiktok:'https://www.tiktok.com/@sesubasta.cl',linkedin:'https://www.linkedin.com/company/sesubasta/'};d.whatsapp=d.whatsapp||[];d.tasks=d.tasks||[]});
 const engine=new Engine(store.data.subastas,{persist:store.enginePersist()});
 const limiter=new S.RateLimiter();
 const clients=new Map();// response -> {auction}

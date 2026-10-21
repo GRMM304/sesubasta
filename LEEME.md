@@ -106,6 +106,13 @@ RESEND_API_KEY=re_xxxxxxxx MAIL_FROM="SeSubasta <avisos@sesubasta.cl>" SITE_URL=
 
 Si el proveedor falla, el mensaje se reintenta hasta 3 veces. Cada correo incluye la cabecera List-Unsubscribe para la baja con un clic en Gmail y Outlook.
 
+## Logos y redes sociales
+
+- **Pie de página:** logo vertical oficial en negativo (`assets/marca/logo-sesubasta-vertical-negativo.png`), una copia web del archivo "Identidad SeSubasta-10".
+- **Cabecera del panel del equipo:** logotipo en negativo (`assets/marca/logo-sesubasta-negativo.png`), a partir de "Identidad SeSubasta-08".
+- Los originales no se modificaron.
+- Los íconos de Facebook, Instagram, TikTok y LinkedIn enlazan a las direcciones configuradas en Gestión → Configuración → Datos de contacto públicos. Si dejas un campo vacío, su ícono se oculta.
+
 ## Google Analytics 4
 
 Ya está etiquetado. Basta con pegar el ID de medición `G-XXXXXXXXXX` en Gestión → Configuración (Administrador general). La etiqueta solo se carga si la persona acepta las cookies de analítica (Consent Mode v2), y nunca se envían montos ni datos personales. El detalle de eventos y la configuración recomendada están en `docs/plan-de-medicion.md`.

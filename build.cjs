@@ -12,7 +12,7 @@ const cat=id=>data.categories.find(c=>c.id===id);
 const posts=data.posts.filter(p=>p.status==='published').map(p=>({id:p.id,slug:p.slug,title:p.title,excerpt:p.excerpt,body:p.body,cover:{url:rel(D.mediaUrl(p.cover.key)),alt:p.cover.alt},category:cat(p.categoryId)&&{name:cat(p.categoryId).name,slug:cat(p.categoryId).slug},tags:[],author:'Equipo editorial',publishedAt:p.publishedAt,updatedAt:p.updatedAt,readMinutes:Math.max(1,Math.round(p.body.split(/\s+/).length/200)),metaDescription:p.excerpt,featured:p.featured}));
 const c=data.config;
 const seed={builtAt:data.createdAt,properties,posts,categories:data.categories.map(x=>({name:x.name,slug:x.slug,description:x.description,count:posts.filter(p=>p.category?.slug===x.slug).length})),legal:c.legal,subastas:data.subastas,
- config:{ga:{measurementId:'',debug:false},uf:{value:c.ufValue,date:c.ufDate,source:c.ufSource,demo:true,available:true},contact:c.contact,termsVersion:c.termsVersion,how:c.how,faqs:c.faqs,homeTitle:c.homeTitle,homeLead:c.homeLead,featured:c.featured,mode:'file'}};
+ config:{ga:{measurementId:'',debug:false},uf:{value:c.ufValue,date:c.ufDate,source:c.ufSource,demo:true,available:true},contact:c.contact,social:c.social,termsVersion:c.termsVersion,how:c.how,faqs:c.faqs,homeTitle:c.homeTitle,homeLead:c.homeLead,featured:c.featured,mode:'file'}};
 
 const css=src('fuentes/estilos.css');
 const app=[

@@ -83,7 +83,7 @@ body.has-sticky .main{padding-bottom:calc(96px + var(--safe-bottom))}
 .nav-item.active{color:var(--navy);background:#C6FF3433}
 .nav-icon{height:24px;display:grid;place-items:center}
 body[data-area=staff] .topbar{background:var(--navy);border-color:var(--navy);color:#fff}
-body[data-area=staff] .brand img{background:#fff;padding:4px 8px;border-radius:10px;width:118px}
+body[data-area=staff] .brand img{width:132px;height:auto;border-radius:8px}
 .staff-badge{background:var(--lime);color:var(--navy);font-weight:800;font-size:11px;padding:5px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em}
 .staff-who{margin-left:auto;text-align:right;display:none}.staff-who small{display:block;color:#D8D3EC;font-size:12px}
 body[data-area=staff] .topbar .btn-outline{background:transparent;color:#fff;border-color:#ffffff55;margin-left:auto}
@@ -95,7 +95,7 @@ body[data-area=staff] .demo-banner{background:#2a1c6b;color:#E8E4F7;border-color
 /* ---------- pie ---------- */
 .footer{background:var(--navy);color:#E7E3F5;padding:36px var(--gutter) calc(96px + var(--safe-bottom))}
 .footer-grid{display:grid;gap:26px;max-width:var(--wrap);margin:0 auto}
-.footer img{background:#fff;padding:8px 12px;border-radius:12px;width:150px}
+.footer-brand img{width:150px;height:auto;border-radius:14px}
 .footer h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:#fff;margin-bottom:10px}
 .footer a,.footer .link-btn{display:flex;align-items:center;min-height:40px;color:#E7E3F5;text-decoration:none;font-weight:500;padding:0}
 .footer a:hover{color:var(--lime)}
@@ -535,3 +535,8 @@ body[data-area=staff] .cookie-banner{display:none}
 a.staff-who{color:#fff;text-decoration:none}
 .chip input[type=radio]{accent-color:var(--violet);margin:0}
 .warn{color:var(--warning-text)}
+
+.social{list-style:none;padding:0;margin:16px 0 0;display:flex;gap:10px}
+.social a{display:grid!important;place-items:center;width:44px;height:44px;min-height:44px!important;border-radius:12px;border:1px solid #ffffff33;color:#fff!important;transition:background .15s,color .15s,border-color .15s}
+.social a:hover,.social a:focus-visible{background:var(--lime);color:var(--navy)!important;border-color:var(--lime)}
+.social svg{width:20px;height:20px}
