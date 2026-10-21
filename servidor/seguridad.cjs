@@ -2,11 +2,12 @@
    Uses only node:crypto. Passwords are hashed with scrypt; tokens are stored as SHA-256 digests. */
 const crypto=require('node:crypto');
 
-const SCRYPT={N:16384,r:8,p:1,keylen:64};
-function hashPassword(password){const salt=crypto.randomBytes(16);const key=crypto.scryptSync(String(password),salt,SCRYPT.keylen,{N:SCRYPT.N,r:SCRYPT.r,p:SCRYPT.p});return `scrypt$${salt.toString('base64')}$${key.toString('base64')}`}
-function verifyPassword(password,stored){if(typeof stored!=='string'||!stored.startsWith('scrypt$'))return false;const [,salt,key]=stored.split('$');const expected=Buffer.from(key,'base64');const actual=crypto.scryptSync(String(password),Buffer.from(salt,'base64'),expected.length,{N:SCRYPT.N,r:SCRYPT.r,p:SCRYPT.p});return crypto.timingSafeEqual(expected,actual)}
-/* Same work for unknown accounts so response time does not reveal whether an email exists. */
-const DUMMY_HASH=hashPassword('cuenta-inexistente');
+/* El costo de scrypt se ajusta con SCRYPT_N (por defecto 16384). Se guarda en el hash para verificar siempre con el mismo costo. */
+const costN=()=>{const n=Number(process.env.SCRYPT_N);return Number.isInteger(n)&&n>=1024&&(n&(n-1))===0?n:16384};
+function hashPassword(password){const N=costN();const salt=crypto.randomBytes(16);const key=crypto.scryptSync(String(password),salt,64,{N,r:8,p:1,maxmem:64*1024*1024});return `scrypt$${N}$${salt.toString('base64')}$${key.toString('base64')}`}
+function verifyPassword(password,stored){if(typeof stored!=='string'||!stored.startsWith('scrypt$'))return false;const parts=stored.split('$');const [N,salt,key]=parts.length===4?[Number(parts[1]),parts[2],parts[3]]:[16384,parts[1],parts[2]];const expected=Buffer.from(key,'base64');const actual=crypto.scryptSync(String(password),Buffer.from(salt,'base64'),expected.length,{N,r:8,p:1,maxmem:64*1024*1024});return crypto.timingSafeEqual(expected,actual)}
+/* Mismo trabajo para cuentas inexistentes, así el tiempo de respuesta no revela si un correo existe. Se calcula al primer uso. */
+let dummy=null;const dummyHash=()=>dummy||(dummy=hashPassword('cuenta-inexistente'));
 
 const randomToken=(bytes=32)=>crypto.randomBytes(bytes).toString('base64url');
 const digest=value=>crypto.createHash('sha256').update(String(value)).digest('hex');
@@ -29,4 +30,4 @@ class RateLimiter{constructor(){this.hits=new Map()}
 function sniff(buffer){if(buffer.length<12)return null;if(buffer[0]===0x89&&buffer.toString('ascii',1,4)==='PNG')return 'image/png';if(buffer[0]===0xff&&buffer[1]===0xd8&&buffer[2]===0xff)return 'image/jpeg';if(buffer.toString('ascii',0,4)==='RIFF'&&buffer.toString('ascii',8,12)==='WEBP')return 'image/webp';if(buffer.toString('ascii',0,5)==='%PDF-')return 'application/pdf';return null}
 function decodeUpload(dataUrl,{allowed,maxBytes}){const m=/^data:([\w/+.-]+);base64,([A-Za-z0-9+/=]+)$/.exec(String(dataUrl||''));if(!m)return {error:'El archivo no es válido.'};const buffer=Buffer.from(m[2],'base64');if(!buffer.length)return {error:'El archivo está vacío.'};if(buffer.length>maxBytes)return {error:`El archivo supera ${Math.round(maxBytes/1e6)} MB.`};const mime=sniff(buffer);if(!mime||!allowed.includes(mime))return {error:'Formato no permitido.'};return {buffer,mime}}
 
-module.exports={hashPassword,verifyPassword,DUMMY_HASH,randomToken,digest,id,code6,referenceCode,passwordProblem,normalizeEmail,validEmail,parseCookies,cookie,RateLimiter,decodeUpload};
+module.exports={hashPassword,verifyPassword,get DUMMY_HASH(){return dummyHash()},randomToken,digest,id,code6,referenceCode,passwordProblem,normalizeEmail,validEmail,parseCookies,cookie,RateLimiter,decodeUpload};

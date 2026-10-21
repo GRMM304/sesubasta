@@ -46,6 +46,35 @@ En `/ingresar` también hay botones "Entrar como Alex" y "Entrar como Camila". P
 - **Operación:** el operador abre el monitor de una subasta, la suspende con motivo (los montos se rechazan de inmediato) y el Administrador la reanuda con una nueva fecha. En la subasta cerrada de La Florida se confirma el resultado preliminar o se registra un incumplimiento.
 - **Vender:** completa el formulario de 6 pasos en "Ingresa tu inmueble". La solicitud llega a Solicitudes del equipo y nunca se publica sola.
 
+## Publicar en Cloudflare (sitio de pruebas para el equipo)
+
+El mismo código corre en Cloudflare Workers, en el plan gratuito, con un link fijo `https://sesubasta-remates.<tu-subdominio>.workers.dev`.
+
+| Pieza | Qué hace |
+|---|---|
+| Worker (`cloudflare/worker.mjs`) | Pide la contraseña de acceso y sirve los archivos estáticos de `dist/` |
+| Durable Object `SeSubastaApp` | Es la autoridad: guarda datos y archivos en su SQLite, serializa los montos, mantiene la conexión en vivo por WebSocket y programa con alarmas los cierres, avisos y envíos |
+| `servidor/aplicacion.cjs` | Lógica HTTP compartida con el servidor local; las reglas son idénticas en ambos |
+
+**Pasos:**
+
+1. Crea una cuenta gratuita en cloudflare.com.
+2. Conecta este computador a tu cuenta con `npx wrangler login`. Se abre el navegador para autorizar.
+3. Define la contraseña de acceso del equipo con `npm run cf:clave` y escríbela cuando te la pida.
+4. Publica con `npm run cf:deploy`. Al terminar muestra el link.
+
+Para actualizar el sitio después de un cambio, vuelve a ejecutar `npm run cf:deploy`. Los datos de prueba se conservan entre publicaciones.
+
+**Opcional:** correo real (`npx wrangler secret put RESEND_API_KEY` y `MAIL_FROM`) y WhatsApp automático (`WHATSAPP_TOKEN` y `WHATSAPP_PHONE_ID`).
+
+**Probar antes de publicar:** escribe `SITE_PASSWORD=algo` en un archivo `.dev.vars` y ejecuta `npm run cf:dev`. El sitio queda en `http://127.0.0.1:8787` con el mismo motor de Cloudflare.
+
+**Contraseña de acceso:** mientras exista, todo el sitio (incluidos `/dev/correos` y `/admin-login`) pide esa contraseña y nadie lo indexa. Después, cada persona entra con su cuenta de prueba.
+
+**Límites del plan gratuito** (sobran para un equipo de pruebas): 100.000 solicitudes diarias al Worker y al Durable Object, 5 GB de almacenamiento y 100.000 filas escritas al día.
+
+El servidor local también acepta `SITE_PASSWORD`, por ejemplo para compartirlo con un túnel.
+
 ## Equipo interno y tareas
 
 **Crear usuarios del equipo.** El Administrador general los crea en Gestión → Usuarios y roles, indicando:

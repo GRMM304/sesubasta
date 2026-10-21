@@ -84,7 +84,7 @@ test('alertas por correo: superación, nueva propiedad, recordatorio de cierre, 
  const bid=async(c,id,key)=>{const s=engine.snapshot(id);return c('POST',`/api/v1/auctions/${id}/bids`,{amountMinor:s.nextMinor,unit:'UF',termsVersion:s.termsVersion,key,expectedVersion:s.version})};
  assert.equal((await bid(alex,2,'alert_a1')).status,200);const before=mailsTo('alex@comprador.demo.cl').length;
  assert.equal((await bid(camila,2,'alert_c1')).status,200);
- const outbid=mailsTo('alex@comprador.demo.cl').find(m=>m.subject==='Tu monto fue superado');assert(outbid,'Alex recibe el aviso de superación');assert(outbid.html.includes('Volver a subastar')&&outbid.unsubscribeUrl.includes('/cancelar-alertas'));
+ const outbid=mailsTo('alex@comprador.demo.cl').find(m=>m.subject==='Tu monto fue superado');assert(outbid,'Alex recibe el aviso de superación');assert(require('./servidor/dominio.cjs').renderMail(outbid).html.includes('Volver a subastar')&&outbid.unsubscribeUrl.includes('/cancelar-alertas'));
  assert(mailsTo('camila@comprador.demo.cl').some(m=>m.subject.startsWith('Monto aceptado')),'Camila recibe su comprobante');
  assert(store.data.mail.every(m=>!/\d+\.\d{2}|amountMinor/.test(m.unsubscribeUrl||'')));
  // Alex tiene activadas las alertas de nuevas propiedades: se le avisa al publicar una ficha nueva.

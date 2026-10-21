@@ -14,7 +14,7 @@ const str=(v,max=500)=>typeof v==='string'?v.trim().slice(0,max):'';
 const num=v=>{if(v===''||v==null)return null;const n=Number(v);return Number.isFinite(n)?n:null};
 const chileDate=(t=Date.now())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Santiago'}).format(new Date(t));
 
-function createApi({store,engine,limiter,broadcast,viewers,local=true}){
+function createApi({store,engine,limiter,broadcast,viewers,local=true,realtime='sse'}){
  const db=()=>store.data;
  const routes=[];const route=(method,pattern,handler,opts={})=>routes.push({method,re:new RegExp('^'+pattern.replace(/:(\w+)/g,'(?<$1>[^/]+)')+'$'),handler,opts});
 
@@ -32,7 +32,7 @@ function createApi({store,engine,limiter,broadcast,viewers,local=true}){
 
  /* ---------- public configuration ---------- */
  function ufInfo(){const c=db().config;const valid=c.ufIsDemo||c.ufDate===chileDate();return {value:c.ufValue,date:c.ufDate,source:c.ufSource,demo:!!c.ufIsDemo,available:!!c.ufValue&&valid}}
- route('GET','/api/v1/config',()=>{const c=db().config;return {ga:{measurementId:c.gaMeasurementId||'',debug:!!c.gaDebug},uf:ufInfo(),contact:c.contact,social:c.social||{},termsVersion:c.termsVersion,how:c.how,faqs:c.faqs,homeTitle:c.homeTitle,homeLead:c.homeLead,featured:c.featured,legalVersions:Object.fromEntries(Object.entries(c.legal).map(([k,v])=>[k,v.version])),mode:local?'local-demo':'production',serverNow:Date.now()}});
+ route('GET','/api/v1/config',()=>{const c=db().config;return {ga:{measurementId:c.gaMeasurementId||'',debug:!!c.gaDebug},uf:ufInfo(),contact:c.contact,social:c.social||{},termsVersion:c.termsVersion,how:c.how,faqs:c.faqs,homeTitle:c.homeTitle,homeLead:c.homeLead,featured:c.featured,legalVersions:Object.fromEntries(Object.entries(c.legal).map(([k,v])=>[k,v.version])),mode:local?'local-demo':'production',realtime,serverNow:Date.now()}});
  route('GET','/api/v1/currency-rates/uf',()=>ufInfo());
  route('GET','/api/v1/legal/:key',(ctx,{key})=>{const l=db().config.legal[key];if(!l)fail(404,'NOT_FOUND','Página no disponible.');return l});
 
@@ -57,7 +57,7 @@ function createApi({store,engine,limiter,broadcast,viewers,local=true}){
   const auction=engine.state.auctions[String(id)];
   if(!existing&&u.termsVersion!==auction.termsVersion){if(b.acceptTerms===true&&b.termsVersion===auction.termsVersion){store.tx(d=>{const x=d.users.find(v=>v.id===u.id);x.termsVersion=auction.termsVersion;(d.consents=d.consents||[]).push({userId:u.id,type:'terms',version:auction.termsVersion,granted:true,at:Date.now(),source:'bid'})})}else fail(409,'TERMS_REQUIRED','Acepta las bases vigentes para subastar.')}
   let result;try{result=engine.submit({id:Number(id),buyer:u.id,amountMinor:b.amountMinor,unit:b.unit,termsVersion:b.termsVersion,key:b.key,expectedVersion:b.expectedVersion})}
-  catch(e){if(e instanceof AuctionError){store.tx(d=>{d.attempts.unshift({id:S.id('try'),auctionId:Number(id),buyerId:u.id,amountMinor:Number.isFinite(b.amountMinor)?b.amountMinor:null,result:'rejected',code:e.code,message:e.message,at:Date.now(),requestId:ctx.requestId});if(d.attempts.length>5000)d.attempts.length=5000});e.extra={snapshot:engine.state.auctions[String(id)]?engine.snapshot(id):null}}throw e}
+  catch(e){if(e instanceof AuctionError){store.tx(d=>{d.attempts.unshift({id:S.id('try'),auctionId:Number(id),buyerId:u.id,amountMinor:Number.isFinite(b.amountMinor)?b.amountMinor:null,result:'rejected',code:e.code,message:e.message,at:Date.now(),requestId:ctx.requestId});if(d.attempts.length>3000)d.attempts.length=3000});e.extra={snapshot:engine.state.auctions[String(id)]?engine.snapshot(id):null}}throw e}
   if(!result.duplicate){const prop=db().properties.find(p=>p.auctionId===Number(id));store.tx(d=>{d.attempts.unshift({id:S.id('try'),auctionId:Number(id),buyerId:u.id,amountMinor:b.amountMinor,result:'accepted',code:'ACCEPTED',receipt:result.receipt.receipt,sequence:result.receipt.sequence,at:Date.now(),requestId:ctx.requestId});
     const link=`/remates/${prop?.slug||''}/participar`;D.notify(d,u.id,{type:'bid',cta:'Ir a la sala',title:`Monto aceptado · ${result.receipt.receipt}`,body:`Tu monto de ${(b.amountMinor/100).toLocaleString('es-CL')} UF en "${prop?.title}" fue aceptado. No equivale a adjudicación.`,link});
     if(result.previousLeader&&result.previousLeader!==u.id)D.notify(d,result.previousLeader,{type:'outbid',cta:'Volver a subastar',title:'Tu monto fue superado',body:`Hay un monto mayor en "${prop?.title}". Puedes volver a subastar hasta el cierre.`,link,group:'outbid:'+id})});broadcast()}
@@ -346,7 +346,7 @@ function createApi({store,engine,limiter,broadcast,viewers,local=true}){
  route('GET','/api/v1/admin/audit',ctx=>{staff(ctx,'general_admin');let rows=db().audit.slice().reverse();if(ctx.query.entity)rows=rows.filter(a=>a.entity===ctx.query.entity);const q=str(ctx.query.q,80).toLowerCase();const users=db().users;const out=rows.map(a=>({...a,actor:users.find(u=>u.id===a.actorId)?.name||'Sistema'})).filter(a=>!q||(a.action+a.actor+a.entityId).toLowerCase().includes(q));return {items:out.slice(0,300)}});
 
  /* ---------- local-only developer mailbox ---------- */
- route('GET','/api/v1/dev/mail',()=>{if(!local)fail(404,'NOT_FOUND','Ruta no disponible.');return {items:db().mail.slice(0,100).map(({text,...m})=>m),provider:process.env.RESEND_API_KEY&&process.env.MAIL_FROM?'resend':'local'}});
+ route('GET','/api/v1/dev/mail',()=>{if(!local)fail(404,'NOT_FOUND','Ruta no disponible.');return {items:db().mail.slice(0,100).map(m=>({...m,html:D.renderMail(m).html})),provider:process.env.RESEND_API_KEY&&process.env.MAIL_FROM?'resend':'local'}});
 
  /* ---------- alertas de interés (nuevas propiedades, guardadas, inicio y cierre, blog) ---------- */
  const fmtCL=t=>new Date(t).toLocaleString('es-CL',{timeZone:'America/Santiago',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
@@ -372,7 +372,7 @@ function createApi({store,engine,limiter,broadcast,viewers,local=true}){
  route('POST','/api/v1/alerts/unsubscribe',ctx=>{const {u,c,t}=ctx.body;const prefKey={auction:'notifyEmail',saved:'alertsSaved',new:'alertsNew',news:'alertsNews'}[c];const user=db().users.find(x=>x.id===u);if(!prefKey||!user||!Mail.verifyUnsub(db(),u,c,t))fail(400,'TOKEN_INVALID','El enlace no es válido.');store.tx(d=>{const x=d.users.find(v=>v.id===u);x.prefs={...(x.prefs||{}),[prefKey]:false};D.audit(d,u,'user.unsubscribe','user',u,{category:c},ctx.requestId)});return {ok:true,category:Mail.CATEGORIES[c].label}});
  /* Entrega de la bandeja de salida: local (queda en /dev/correos) o proveedor real si está configurado. */
  let delivering=false;async function deliverOutbox(){if(delivering)return;const queue=db().mail.filter(m=>m.status==='queued'&&m.tries<3).slice(0,20);if(!queue.length)return;delivering=true;
-  try{for(const m of queue){let status,error='';try{status=(await Mail.deliver(m)).status}catch(err){status='queued';error=err.message}store.tx(d=>{const x=d.mail.find(v=>v.id===m.id);if(x){x.status=status;x.tries++;x.error=error;if(x.tries>=3&&status==='queued')x.status='failed';x.deliveredAt=status==='sent'||status==='local'?Date.now():null}})}}finally{delivering=false}}
+  try{for(const m of queue){let status,error='';try{status=(await Mail.deliver({...m,...D.renderMail(m)})).status}catch(err){status='queued';error=err.message}store.tx(d=>{const x=d.mail.find(v=>v.id===m.id);if(x){x.status=status;x.tries++;x.error=error;if(x.tries>=3&&status==='queued')x.status='failed';x.deliveredAt=status==='sent'||status==='local'?Date.now():null}})}}finally{delivering=false}}
 
  /* ---------- periodic work: close results and scheduled posts ---------- */
  function tick(){const alerted=timedAlerts();taskReminders();deliverOutbox().catch(e=>console.error('correo',e));deliverWhatsapp().catch(e=>console.error('whatsapp',e));const d=db();const now=Date.now();const pending=[];for(const aid of Object.keys(engine.state.auctions)){const a=engine.state.auctions[aid];if(engine.status(a)==='closed'&&!d.awards[aid])pending.push(aid)}
@@ -382,6 +382,14 @@ function createApi({store,engine,limiter,broadcast,viewers,local=true}){
     const people=new Set(engine.get(aid).bids.map(b=>b.buyer));people.forEach(uid=>D.notify(x,uid,{type:'result',cta:'Ver resultado',title:`Subasta cerrada · ${p?.title||''}`,body:uid===r.best?.buyer?'Tu monto fue el más alto al cierre. Es un resultado preliminar: la adjudicación requiere confirmación según las bases.':'La subasta cerró y tu monto no fue el más alto.',link:`/remates/${p?.slug||''}/resultado`}))}
    for(const p of due){const y=x.posts.find(v=>v.id===p.id);y.status='published';y.publishedAt=y.scheduledAt;y.scheduledAt=null;newsAlert(x,y);D.audit(x,null,'post.auto_publish','post',y.id,{},'')}});return true}
 
+ /* Próximo instante en que hay trabajo programado (cierres, avisos, publicaciones, recordatorios, envíos). */
+ function nextWake(){const now=Date.now(),d=db(),t=[];
+  for(const [aid,a] of Object.entries(engine.state.auctions)){const s=engine.status(a);if(s==='closed'){if(!d.awards[aid])t.push(now+500);continue}if(['cancelled','draft'].includes(s))continue;if(s==='paused')continue;t.push(a.end,a.end-3600000,a.end-600000,a.start,a.start-3600000)}
+  for(const p of d.posts)if(p.status==='scheduled'&&p.scheduledAt)t.push(p.scheduledAt);
+  for(const k of d.tasks||[])if(k.dueAt&&['pending','in_progress'].includes(k.status)){t.push(k.dueAt-86400000,k.dueAt)}
+  if(d.mail.some(m=>m.status==='queued'&&m.tries<3)||(d.whatsapp||[]).some(m=>m.status==='queued'&&m.tries<3))t.push(now+1000);
+  const future=t.filter(x=>x>now);return future.length?Math.min(...future):null}
+ const flushOutbox=()=>Promise.all([deliverOutbox(),deliverWhatsapp()]);
  async function handle(ctx){const r=routes.find(r=>r.method===ctx.method&&r.re.test(ctx.path));if(!r)return null;const params=ctx.path.match(r.re).groups||{};if(['POST','PATCH','DELETE'].includes(ctx.method))ctx.body=await ctx.readBody(r.opts.maxBody||64000);else ctx.body={};return {result:await r.handler(ctx,params),raw:r.opts.raw}}
- return {handle,tick,HttpError,published,postPublic,livePosts,ufInfo,decorate}}
+ return {handle,tick,nextWake,flushOutbox,HttpError,published,postPublic,livePosts,ufInfo,decorate}}
 module.exports={createApi,HttpError};

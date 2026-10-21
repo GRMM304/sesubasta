@@ -15,6 +15,7 @@ class Store{
  enginePersist(){return state=>{const draft={...this.data,subastas:state};this.write(draft);this.data=draft}}
  saveFile(visibility,key,buffer){const target=path.join(this.filesDir,visibility,key);if(!target.startsWith(path.join(this.filesDir,visibility)+path.sep))throw Error('Ruta de archivo no válida.');fs.writeFileSync(target,buffer);return key}
  filePath(visibility,key){if(!/^[\w.-]+$/.test(key))return null;const target=path.join(this.filesDir,visibility,key);return fs.existsSync(target)?target:null}
+ readFile(visibility,key){const p=this.filePath(visibility,key);return p?fs.readFileSync(p):null}
  moveFile(from,to,key){const a=this.filePath(from,key);if(!a)return;fs.renameSync(a,path.join(this.filesDir,to,key))}
 }
 module.exports={Store,clone};

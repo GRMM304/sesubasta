@@ -1,3 +1,6 @@
-runtime-data/
 .DS_Store
+.dev.vars
+.wrangler/
+dist/
 node_modules/
+runtime-data/

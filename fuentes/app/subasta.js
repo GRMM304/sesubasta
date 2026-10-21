@@ -13,8 +13,14 @@ const Live={snaps:new Map(),serverAt:0,mono:0,lastSeen:0,connected:false,source:
   if(FILE_MODE){setInterval(()=>this.refresh(),1000)}else this.connect();
   setInterval(()=>this.patch(),500);
   /* Una pestaña en segundo plano libera su conexión en vivo; al volver se reconecta y se pide el estado completo. */
-  document.addEventListener('visibilitychange',()=>{if(FILE_MODE)return;if(document.hidden){this.source?.close();this.source=null;this.connected=false}else{this.refresh();this.connect()}})},
- connect(){if(this.source||document.hidden)return;this.source=new EventSource('/api/v1/events');this.source.addEventListener('snapshot',e=>{try{this.accept(JSON.parse(e.data))}catch{}});this.source.onerror=()=>{this.connected=false;this.patch()}},
+  document.addEventListener('visibilitychange',()=>{if(FILE_MODE)return;if(document.hidden){this.disconnect()}else{this.refresh();this.connect()}})},
+ disconnect(){clearInterval(this.pinger);clearTimeout(this.retry);const s=this.source;this.source=null;this.connected=false;try{s?.close()}catch{}},
+ /* Cloudflare: WebSocket con señal de vida; servidor local: Server-Sent Events. */
+ connect(){if(this.source||document.hidden)return;if(state.config?.realtime==='ws'){const ws=new WebSocket((location.protocol==='https:'?'wss://':'ws://')+location.host+'/api/v1/ws');this.source=ws;this.backoff=this.backoff||1000;
+   ws.onopen=()=>{this.backoff=1000;this.pinger=setInterval(()=>{try{ws.send('ping')}catch{}},3000)};
+   ws.onmessage=e=>{if(e.data==='pong'){this.lastSeen=performance.now();this.connected=true;return}try{this.accept(JSON.parse(e.data))}catch{}};
+   ws.onclose=()=>{clearInterval(this.pinger);if(this.source!==ws)return;this.source=null;this.connected=false;this.patch();this.retry=setTimeout(()=>{this.refresh();this.connect()},this.backoff);this.backoff=Math.min(this.backoff*2,15000)};return}
+  this.source=new EventSource('/api/v1/events');this.source.addEventListener('snapshot',e=>{try{this.accept(JSON.parse(e.data))}catch{}});this.source.onerror=()=>{this.connected=false;this.patch()}},
  countdown(a){if(!a)return 'Sin datos de la subasta';const s=this.status(a);if(s==='closed')return 'Subasta finalizada';if(s==='paused')return 'Subasta suspendida';if(s==='cancelled')return 'Subasta cancelada';const ms=Math.max(0,(s==='scheduled'?a.start:a.end)-this.now()),t=Math.ceil(ms/1000);const d=Math.floor(t/86400),hh=Math.floor(t/3600)%24,mm=Math.floor(t/60)%60,ss=t%60;return (s==='scheduled'?'Empieza en ':'Cierra en ')+(d?d+' d ':'')+[hh,mm,ss].map(x=>String(x).padStart(2,'0')).join(':')},
  people(a){if(!a||!a.participants)return this.status(a)==='open'?'Aún nadie ha subastado':this.status(a)==='scheduled'?'Aún no comienza':'Sin montos registrados';return a.participants===1?'1 persona ha subastado':`${a.participants} personas han subastado`},
  connection(){if(FILE_MODE)return 'Vista individual · sin sincronización entre personas';return this.stale()?'Reconectando · nuevos envíos bloqueados':'Conectado · actualización en tiempo real'},
