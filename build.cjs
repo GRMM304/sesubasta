@@ -18,7 +18,7 @@ const css=src('fuentes/estilos.css');
 const app=[
  `window.__SEED=${JSON.stringify(seed)};window.__COMMUNES=${JSON.stringify(COMMUNES)};`,
  src('fuentes/auction-core.js'),src('fuentes/catalogo-core.js'),
- ...['nucleo','marco','subasta','publico','cuenta','gestion','equipo','arranque'].map(n=>`/* ---- ${n}.js ---- */\n`+src(`fuentes/app/${n}.js`))
+ ...['nucleo','marco','subasta','publico','cuenta','gestion','equipo','garantias','arranque'].map(n=>`/* ---- ${n}.js ---- */\n`+src(`fuentes/app/${n}.js`))
 ].join('\n').replace(/<\/script/gi,'<\\/script');
 /* The server needs home config "featured" too: expose it through /api/v1/config. */
 const html=src('fuentes/plantilla.html').replace('/*@@CSS@@*/',()=>css).replace('/*@@APP@@*/',()=>app);

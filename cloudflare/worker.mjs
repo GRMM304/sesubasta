@@ -1,7 +1,7 @@
 /* SeSubasta · Remates Dinámicos en Cloudflare Workers (plan gratuito).
    - El Worker protege el sitio con la contraseña de acceso y sirve los archivos estáticos.
    - Un único Durable Object (SeSubastaApp) es la autoridad: guarda los datos en su SQLite,
-     serializa cada monto, mantiene las conexiones en vivo (WebSocket con hibernación) y
+     serializa cada oferta, mantiene las conexiones en vivo (WebSocket con hibernación) y
      programa con alarmas los cierres, avisos, recordatorios y envíos de correo y WhatsApp. */
 import {DurableObject} from 'cloudflare:workers';
 import {Buffer} from 'node:buffer';
@@ -17,7 +17,7 @@ import {migrate} from '../servidor/migracion.cjs';
 import S from '../servidor/seguridad.cjs';
 globalThis.Buffer??=Buffer;
 
-const ENV_KEYS=['DEMO_LIVE_MINUTES','SITE_URL','BREVO_API_KEY','RESEND_API_KEY','MAIL_FROM','WHATSAPP_TOKEN','WHATSAPP_PHONE_ID','WHATSAPP_TEMPLATE','WHATSAPP_LANG','SCRYPT_N','SESUBASTA_MODE'];
+const ENV_KEYS=['DEMO_LIVE_MINUTES','SITE_URL','BREVO_API_KEY','RESEND_API_KEY','MAIL_FROM','WHATSAPP_TOKEN','WHATSAPP_PHONE_ID','WHATSAPP_TEMPLATE','WHATSAPP_LANG','SCRYPT_N','SESUBASTA_MODE','GEOCODER_PROVIDER'];
 const ip=request=>request.headers.get('cf-connecting-ip')||'cf';
 
 export class SeSubastaApp extends DurableObject{

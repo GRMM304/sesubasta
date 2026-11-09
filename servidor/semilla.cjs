@@ -26,7 +26,7 @@ const LEGAL={
  privacidad:{title:'Política de privacidad',version:'borrador-2026-10',body:`Texto de demostración pendiente de revisión por asesoría legal. No constituye la política vigente de SeSubasta.
 
 ## Qué datos usamos
-En este prototipo solo se registran datos ficticios: nombre, correo, teléfono opcional, propiedades guardadas y montos de prueba.
+En este prototipo solo se registran datos ficticios: nombre, correo, teléfono opcional, propiedades guardadas y ofertas de prueba.
 
 ## Para qué los usamos
 Para identificar la cuenta, mostrar tu actividad propia, enviar avisos de la subasta y responder solicitudes.
@@ -39,23 +39,23 @@ Los plazos de conservación se definirán antes de operar con datos reales.`},
  terminos:{title:'Términos de uso y bases de demostración',version:TERMS_VERSION,body:`Texto de demostración pendiente de aprobación por Dirección y asesoría legal.
 
 ## Mecánica
-La subasta es ascendente y continua hasta un cierre fijo en hora de Chile. Cada monto debe ser igual o mayor al siguiente mínimo calculado por el servidor. No hay extensión automática del cierre.
+La subasta es ascendente y continua hasta un cierre fijo en hora de Chile. Cada oferta debe ser igual o mayor al siguiente mínimo calculado por el servidor. No hay extensión automática del cierre.
 
-## Efecto de un monto aceptado
-Un monto aceptado actualiza el monto vigente. No equivale a adjudicación: el resultado al cierre es preliminar y requiere confirmación según las bases definitivas.
+## Efecto de una oferta aceptada
+Una oferta aceptada actualiza la oferta vigente. No equivale a adjudicación: el resultado al cierre es preliminar y requiere confirmación según las bases definitivas.
 
-## Sin inscripción ni garantía
-En esta versión no se exige inscripción por propiedad ni garantía para subastar.
+## Garantía de seriedad
+No se exige inscripción por propiedad. Cuando la ficha indica un monto de garantía, para ofertar debes transferirlo a la cuenta de SeSubasta con el código que te entregamos, desde una cuenta a tu nombre, y esperar la confirmación del equipo. Si no quedas entre los dos primeros, la garantía se devuelve a esa misma cuenta dentro de los días hábiles indicados. La del segundo lugar se devuelve al confirmarse la adjudicación. La del adjudicatario se abona al precio, y puede retenerse si no cumple lo establecido en las bases. SeSubasta no mantiene saldos ni cuentas a nombre de los participantes.
 
 ## Información de las propiedades
-Las propiedades, imágenes y montos de este prototipo son ilustrativos y no representan inventario real.`},
+Las propiedades, imágenes y valores de este prototipo son ilustrativos y no representan inventario real.`},
  cookies:{title:'Política de cookies',version:'borrador-2026-10',body:`Texto de demostración.
 
 ## Necesarias
 Mantienen la sesión, la preferencia de moneda y tu elección de cookies. No se pueden desactivar.
 
 ## Analítica
-Si las aceptas, usamos Google Analytics 4 para medir visitas y uso del sitio de forma agregada. No enviamos montos, correos, teléfonos ni direcciones.
+Si las aceptas, usamos Google Analytics 4 para medir visitas y uso del sitio de forma agregada. No enviamos ofertas, correos, teléfonos ni direcciones.
 
 ## Marketing
 Permiten medir campañas. Están desactivadas salvo que las aceptes.
@@ -63,36 +63,36 @@ Permiten medir campañas. Están desactivadas salvo que las aceptes.
 Puedes cambiar tu elección en cualquier momento desde Preferencias de cookies.`},
  eliminacion:{title:'Eliminación de cuenta y datos',version:'borrador-2026-10',body:`Puedes solicitar la eliminación de tu cuenta desde Mi cuenta › Perfil y privacidad. La solicitud queda registrada y el equipo la gestiona según los plazos que se definan.
 
-Algunos registros, como montos aceptados en una subasta, pueden requerir conservación por trazabilidad; en ese caso se anonimizan los datos personales.
+Algunos registros, como ofertas aceptadas en una subasta, pueden requerir conservación por trazabilidad; en ese caso se anonimizan los datos personales.
 
 Si no puedes ingresar a tu cuenta, usa el formulario de contacto indicando que se trata de una solicitud de eliminación.`}
 };
 const FAQS=[
- ['¿Necesito inscribirme en cada remate?','No. Con una cuenta de comprador activa y tu correo verificado puedes subastar en cualquier propiedad abierta.'],
- ['¿Cómo se define el siguiente mínimo?','Antes del primer registro es el monto inicial. Después de cada monto aceptado es el monto vigente más el incremento configurado para esa subasta.'],
- ['¿Puedo subastar varias veces?','Sí. Puedes registrar nuevos montos válidos durante toda la ventana abierta, incluso para superar tu propio monto.'],
+ ['¿Necesito inscribirme en cada remate?','No. Con una cuenta de comprador activa y tu correo verificado puedes ofertar en cualquier propiedad abierta.'],
+ ['¿Cómo se define el siguiente mínimo?','Antes de la primera oferta es el precio inicial. Después de cada oferta aceptada es la oferta vigente más el incremento configurado para esa subasta.'],
+ ['¿Puedo ofertar varias veces?','Sí. Puedes registrar nuevas ofertas válidas durante toda la ventana abierta, incluso para superar tu propia oferta.'],
  ['¿Qué pasa al llegar la hora de cierre?','El cierre es fijo. Cualquier intento evaluado a esa hora o después se rechaza. No hay extensión automática.'],
- ['¿Tener el mejor monto significa que gané?','No necesariamente. Al cierre se informa un resultado preliminar; la adjudicación requiere confirmación según las bases.'],
- ['¿Por qué veo montos en UF y en pesos?','La unidad contractual de cada subasta es la UF. El selector CLP muestra una equivalencia referencial con la tasa y fecha indicadas.'],
- ['¿Quién ve mis montos?','Solo tú y el equipo autorizado. El público ve el monto vigente agregado y la cantidad de personas, nunca tu identidad.']
+ ['¿Tener la mejor oferta significa que gané?','No necesariamente. Al cierre se informa un resultado preliminar; la adjudicación requiere confirmación según las bases.'],
+ ['¿Por qué veo los valores en UF y en pesos?','La unidad contractual de cada subasta es la UF. El selector CLP muestra una equivalencia referencial con la tasa y fecha indicadas.'],
+ ['¿Quién ve mis ofertas?','Solo tú y el equipo autorizado. El público ve solo la oferta vigente y la cantidad de personas, nunca tu identidad.']
 ];
-const HOW={title:'Cómo funcionan los Remates Dinámicos',lead:'Revisa la propiedad, inicia sesión y subasta directamente hasta el cierre. Sin inscripción por propiedad.',steps:[
+const HOW={title:'Cómo funcionan los Remates Dinámicos',lead:'Revisa la propiedad, inicia sesión y oferta directamente hasta el cierre. Sin inscripción por propiedad.',steps:[
  ['Explora y revisa','Consulta la ficha completa, las fechas en hora de Chile, las bases y los documentos públicos autorizados.'],
  ['Inicia sesión','Crea tu cuenta de comprador y verifica tu correo. Una sola cuenta sirve para todas las subastas.'],
- ['Subasta en vivo','Ingresa un monto igual o mayor al siguiente mínimo, revísalo y confírmalo. Recibes un folio al instante.'],
- ['Sigue hasta el cierre','Puedes volver a subastar cuantas veces quieras. Al cierre recibes el resultado preliminar y los próximos pasos.']],
- purpose:'Remates Dinámicos ordena la información de cada propiedad y registra cada monto con hora oficial del servidor para que la competencia sea transparente.',
+ ['Oferta en vivo','Ingresa una oferta igual o mayor al siguiente mínimo, revísala y confírmala. Recibes un folio al instante.'],
+ ['Sigue hasta el cierre','Puedes volver a ofertar cuantas veces quieras. Al cierre recibes el resultado preliminar y los próximos pasos.']],
+ purpose:'Remates Dinámicos ordena la información de cada propiedad y registra cada oferta con hora oficial del servidor para que la competencia sea transparente.',
  values:['Información revisada antes de publicar','Reglas visibles y versionadas','Privacidad de cada participante','Hora oficial y cierre fijo']};
 
 const BLOG_CATEGORIES=[['Guías para compradores','guias-para-compradores','Cómo revisar una ficha y participar con información.'],['Antecedentes legales','antecedentes-legales','Qué documentos revisar y qué preguntar.'],['Cómo funciona','como-funciona','La mecánica de la subasta continua paso a paso.'],['Vender una propiedad','vender-una-propiedad','Qué esperar al presentar un inmueble.']];
 const POSTS=[
- {title:'Antes de una subasta, revisa estas 5 partes de la ficha',category:'guias-para-compradores',image:15,excerpt:'Una fecha de cierre no cuenta toda la historia. Aprende qué información mirar antes de tomar una decisión.',body:`Una ficha clara reúne características, estado informado, fechas, condiciones y documentos autorizados. Léela completa antes de subastar.
+ {title:'Antes de una subasta, revisa estas 5 partes de la ficha',category:'guias-para-compradores',image:15,excerpt:'Una fecha de cierre no cuenta toda la historia. Aprende qué información mirar antes de tomar una decisión.',body:`Una ficha clara reúne características, estado informado, fechas, condiciones y documentos autorizados. Léela completa antes de ofertar.
 
 ## 1. Fechas en hora de Chile
-Revisa el inicio y el cierre. El cierre es fijo: a esa hora el sistema deja de recibir montos.
+Revisa el inicio y el cierre. El cierre es fijo: a esa hora el sistema deja de recibir ofertas.
 
-## 2. Monto vigente y siguiente mínimo
-El siguiente mínimo lo calcula el servidor. Si otra persona registra un monto mientras revisas, tendrás que confirmar de nuevo.
+## 2. Oferta vigente y siguiente mínimo
+El siguiente mínimo lo calcula el servidor. Si otra persona registra una oferta mientras revisas, tendrás que confirmar de nuevo.
 
 ## 3. Ocupación informada
 Indica si la propiedad está ocupada, desocupada o por confirmar. Considera ese dato en tu evaluación.
@@ -117,14 +117,14 @@ La información editorial es general y no reemplaza la revisión profesional que
 El contador se sincroniza con la hora del servidor. Cambiar la hora de tu teléfono o computador no altera el cierre.
 
 ## Si se suspende una subasta
-Verás el estado Suspendida y el motivo. Mientras dure no se reciben montos. Si se reanuda, se informa la nueva hora de cierre.`},
- {title:'Subasta continua: puedes volver a subastar hasta el cierre',category:'como-funciona',image:7,excerpt:'Cómo funciona la competencia de montos en tiempo real y por qué no necesitas inscribirte en cada propiedad.',body:`En Remates Dinámicos una sola cuenta de comprador te permite participar en todas las subastas abiertas.
+Verás el estado Suspendida y el motivo. Mientras dure no se reciben ofertas. Si se reanuda, se informa la nueva hora de cierre.`},
+ {title:'Subasta continua: puedes volver a ofertar hasta el cierre',category:'como-funciona',image:7,excerpt:'Cómo funciona la competencia de ofertas en tiempo real y por qué no necesitas inscribirte en cada propiedad.',body:`En Remates Dinámicos una sola cuenta de comprador te permite participar en todas las subastas abiertas.
 
-## Cada monto recibe un folio
-Cuando el servidor acepta tu monto, recibes un folio con la hora oficial y la secuencia. Ese registro aparece en Mis subastas.
+## Cada oferta recibe un folio
+Cuando el servidor acepta tu oferta, recibes un folio con la hora oficial y la secuencia. Ese registro aparece en Mis subastas.
 
-## Superar tu propio monto
-Puedes registrar un nuevo monto aunque vayas primero, siempre que cumpla el siguiente mínimo.
+## Superar tu propia oferta
+Puedes registrar una nueva oferta aunque vayas primero, siempre que cumpla el siguiente mínimo.
 
 ## Si pierdes la conexión
 La sala bloquea nuevos envíos hasta reconectar. Si un envío quedó pendiente, reintenta la misma solicitud: nunca se crea un segundo registro.`},
@@ -159,7 +159,7 @@ function seedData(store){
   const gallery=[r.image,...byType[r.type].filter(x=>x!==r.image)].slice(0,4);
   const docKey=`bases-${r.id}.pdf`;store.saveFile('publico',docKey,makePdf('Bases de la subasta - documento de demostracion',[`Propiedad ${r.title}`,'Mecanica: subasta ascendente continua con cierre fijo.','Incremento de muestra: 50 UF. Unidad contractual: UF.','Documento ficticio. No tiene validez legal.']));
   const legalKey=`legal-${r.id}.pdf`;store.saveFile('privado',legalKey,makePdf('Antecedente legal privado - demostracion',[`Propiedad ${r.title}`,'Archivo privado: solo Legal y Administrador general.']));
-  return {id:r.id,publicId:'SS-'+String(r.id).padStart(4,'0'),slug:slugify(`${r.title} ${commune}`)+'-'+r.id,title:r.title,type:r.type,region:c.region,commune,publicLocation:`${commune}, ${c.region}`,exactAddress:'Dirección privada de demostración',lat:c.lat,lng:c.lng,rooms:r.rooms,baths:r.baths,parking:r.parking,area:r.area,plot:r.plot,occupancy:r.occupancy,expenses:null,description:r.description,
+  return {id:r.id,publicId:'SS-'+String(r.id).padStart(4,'0'),slug:r.slug||slugify(`${r.title} ${commune}`)+'-'+r.id,title:r.title,type:r.type,region:c.region,commune,publicLocation:`${commune}, ${c.region}`,exactAddress:'Dirección privada de demostración',lat:c.lat,lng:c.lng,rooms:r.rooms,baths:r.baths,parking:r.parking,area:r.area,plot:r.plot,occupancy:r.occupancy,expenses:null,description:r.description,appraisalUF:r.appraisalUF??null,mortgage:r.mortgage===true,
    media:gallery.map((img,i)=>({key:`demo:${img}`,alt:`Imagen ilustrativa ${i+1} de ${r.type.toLowerCase()} en ${commune}`,order:i,approved:true})),
    documents:[{id:'doc_pub_'+r.id,key:docKey,name:'Bases de la subasta (demostración).pdf',type:'Bases',visibility:'public',uploadedBy:'usr_legal',at:now,mime:'application/pdf'},{id:'doc_priv_'+r.id,key:legalKey,name:'Antecedente legal privado.pdf',type:'Antecedente legal',visibility:'private',uploadedBy:'usr_legal',at:now,mime:'application/pdf'}],
    legalNotes:'Antecedentes de demostración revisados.',legalComplete:true,conditions:{opensAt:subastas.auctions[r.id].start,closesAt:subastas.auctions[r.id].end,initialUF:r.minUF,incrementUF:50},seo:{title:'',description:''},
@@ -171,13 +171,16 @@ function seedData(store){
  const paused=subastas.auctions['20'];paused.start=now-2*3600000;paused.end=now+5*3600000;paused.status='paused';paused.publicReason='Revisión de un antecedente informado. Se comunicará la nueva fecha.';paused.events.push({type:'suspended',reason:paused.publicReason,actor:'usr_oper',time:now-30*60000});
  properties.find(p=>p.id===19).conditions={opensAt:closed.start,closesAt:closed.end,initialUF:3650,incrementUF:50};
  properties.find(p=>p.id===20).conditions={opensAt:paused.start,closesAt:paused.end,initialUF:3580,incrementUF:50};
+ // Una subasta próxima exige garantía: Alex ya la tiene confirmada y Camila debe constituirla (flujo de garantía).
+ const withGuarantee=properties.find(p=>p.id!==20&&subastas.auctions[p.id]&&subastas.auctions[p.id].start>now);if(withGuarantee)withGuarantee.conditions.guaranteeCLP=5000000;
  // A private draft waiting for the final decision, so the review queue is not empty.
  store.saveFile('privado','legal-21.pdf',makePdf('Antecedente legal privado - demostracion',['Departamento en Vina del Mar','Pendiente de decision del Administrador general.']));
  properties.push({id:21,publicId:'SS-0021',slug:'departamento-con-vista-al-mar-vina-del-mar-21',title:'Departamento con vista al mar',type:'Departamento',region:'Región de Valparaíso',commune:'Viña del Mar',publicLocation:'Viña del Mar, Región de Valparaíso',exactAddress:'Dirección privada de demostración',lat:-33.0245,lng:-71.5518,rooms:3,baths:2,parking:1,area:96,plot:null,occupancy:'Desocupada',expenses:null,description:'Borrador privado de demostración enviado a revisión. No es visible en el sitio público.',media:[{key:'demo:1',alt:'Imagen ilustrativa de departamento en Viña del Mar',order:0,approved:true}],documents:[{id:'doc_priv_21',key:'legal-21.pdf',name:'Antecedente legal privado.pdf',type:'Antecedente legal',visibility:'private',uploadedBy:'usr_legal',at:now,mime:'application/pdf'}],legalNotes:'Antecedentes completos para revisión.',legalComplete:true,conditions:{opensAt:now+2*86400000,closesAt:now+3*86400000,initialUF:4100,incrementUF:50},seo:{title:'',description:''},reviewStatus:'in_review',publicStatus:'not_public',version:2,submittedVersion:2,reviewRequestedAt:now-3600000,publishedVersion:0,history:[{version:1,at:now-86400000,by:'usr_colab',action:'created'},{version:2,at:now-3600000,by:'usr_colab',action:'submitted'}],createdBy:'usr_colab',assignedLegal:'usr_legal',auctionId:null,createdAt:now-86400000,updatedAt:now-3600000,publishedAt:null,demo:true});
  const categories=BLOG_CATEGORIES.map(([name,slug,description],i)=>({id:'cat_'+(i+1),name,slug,description,order:i,active:true}));
  const posts=POSTS.map((p,i)=>({id:'post_'+(i+1),slug:slugify(p.title),title:p.title,excerpt:p.excerpt,body:p.body,cover:{key:`demo:${p.image}`,alt:'Fotografía ilustrativa de una propiedad'},categoryId:categories.find(c=>c.slug===p.category).id,tags:[],authorId:'usr_editor',status:'published',seoTitle:'',metaDescription:p.excerpt,canonical:'',noindex:false,publishedAt:now-(i+1)*86400000*2,scheduledAt:null,createdAt:now-(i+1)*86400000*2,updatedAt:now-(i+1)*86400000,revisions:[],featured:i===0}));
- return {schema:3,createdAt:now,whatsapp:[],tasks:[{id:'task_demo1',code:'T-0001',title:'Revisar fotos de la ficha SS-0021',description:'Confirma que las fotografías sean fieles y que tengan texto alternativo antes de la decisión de publicación.',priority:'alta',dueAt:now+20*3600000,assignees:['usr_colab'],createdBy:'usr_admin',status:'pending',link:{path:'/gestion/propiedades/21?tab=fotos',label:'SS-0021 · Fotografías'},channels:{email:true,whatsapp:true},comments:[],history:[{at:now,by:'usr_admin',action:'created'}],remindersSent:[],createdAt:now,updatedAt:now}],users,sessions:[],tokens:[],properties,subastas,attempts:[],awards:{},leads:[],saved:[{userId:'alex',propertyId:2,at:now},{userId:'alex',propertyId:7,at:now}],notifications:[],mail:[],posts,categories,redirects:[],audit:[],
-  config:{ufValue:40000,ufDate:new Date(now).toISOString().slice(0,10),ufSource:'Valor ficticio de demostración (no oficial)',ufIsDemo:true,gaMeasurementId:'',gaDebug:false,social:{instagram:'https://www.instagram.com/sesubasta.cl/',facebook:'https://www.facebook.com/sesubasta.cl',tiktok:'https://www.tiktok.com/@sesubasta.cl',linkedin:'https://www.linkedin.com/company/sesubasta/'},contact:{email:'contacto@sesubasta.cl',phone:'',instagram:'@sesubasta.cl',hours:'Lunes a viernes, 9:00 a 18:00'},termsVersion:TERMS_VERSION,legal:LEGAL,how:HOW,faqs:FAQS.map(([q,a])=>({q,a})),featured:[2,6,10,1,4,7],homeLead:'Explora propiedades, revisa sus antecedentes y subasta en vivo hasta el cierre. Sin inscripción por propiedad.',homeTitle:'Subasta en vivo, con información clara.',history:[]},
+ const guarantees=withGuarantee?[{id:'gar_demo1',code:'GAR-DEMO0001',userId:'alex',propertyId:withGuarantee.id,auctionId:withGuarantee.auctionId,amountCLP:5000000,status:'confirmed',refundAccount:{holder:'Alex Demo',rut:'11111111-1',bank:'Banco Estado',accountType:'Cuenta vista / RUT',number:'11111111'},termsVersion:TERMS_VERSION,createdAt:now-86400000,reportedAt:now-80000000,operation:'DEMO-123',confirmedBy:'usr_oper',confirmedAt:now-3600000,depositRef:'Cartola demo',history:[{from:null,to:'pending',by:'alex',reason:'Solicitud de la persona',at:now-86400000},{from:'pending',to:'reported',by:'alex',reason:'N° de operación DEMO-123',at:now-80000000},{from:'reported',to:'confirmed',by:'usr_oper',reason:'Ingreso verificado · Cartola demo',at:now-3600000}]}]:[];
+ return {schema:3,createdAt:now,whatsapp:[],guarantees,tasks:[{id:'task_demo1',code:'T-0001',title:'Revisar fotos de la ficha SS-0021',description:'Confirma que las fotografías sean fieles y que tengan texto alternativo antes de la decisión de publicación.',priority:'alta',dueAt:now+20*3600000,assignees:['usr_colab'],createdBy:'usr_admin',status:'pending',link:{path:'/gestion/propiedades/21?tab=fotos',label:'SS-0021 · Fotografías'},channels:{email:true,whatsapp:true},comments:[],history:[{at:now,by:'usr_admin',action:'created'}],remindersSent:[],createdAt:now,updatedAt:now}],users,sessions:[],tokens:[],properties,subastas,attempts:[],awards:{},leads:[],saved:[{userId:'alex',propertyId:2,at:now},{userId:'alex',propertyId:7,at:now}],notifications:[],mail:[],posts,categories,redirects:[],audit:[],
+  config:{guaranteeBank:{holder:'Titular de demostración',rut:'76086428-5',bank:'Banco de demostración',accountType:'Cuenta corriente',number:'00000000',email:'contacto@sesubasta.cl',refundDays:3},ufValue:40000,ufDate:new Date(now).toISOString().slice(0,10),ufSource:'Valor ficticio de demostración (no oficial)',ufIsDemo:true,gaMeasurementId:'',gaDebug:false,social:{instagram:'https://www.instagram.com/sesubasta.cl',facebook:'https://www.facebook.com/sesubasta.cl'},socialVersion:3,contact:{email:'contacto@sesubasta.cl',phone:'',instagram:'@sesubasta.cl',hours:'Lunes a viernes, 9:00 a 18:00'},termsVersion:TERMS_VERSION,demoResetVersion:1,legal:LEGAL,how:HOW,faqs:FAQS.map(([q,a])=>({q,a})),featured:[2,6,10,1,4,7],homeLead:'Explora propiedades, revisa sus antecedentes y oferta en vivo hasta el cierre. Sin inscripción por propiedad.',homeTitle:'Revisa *antes* de decidir|Subastas de propiedades en vivo',history:[]},
   meta:{nextPropertyId:22,referenceSeq:0,taskSeq:1}};
 }
 module.exports={seedData,slugify,makePdf,COMMUNES,TERMS_VERSION,referenceCode};

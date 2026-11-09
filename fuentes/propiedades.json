@@ -17,11 +17,13 @@
     "currentUF": 4200,
     "image": 16,
     "condition": "Próxima",
-    "description": "Ficha demostrativa para mostrar cómo se organiza la información de una casa. Antes de participar revisa los antecedentes, las condiciones y el estado informado de la propiedad."
+    "description": "Ficha demostrativa para mostrar cómo se organiza la información de una casa. Antes de participar revisa los antecedentes, las condiciones y el estado informado de la propiedad.",
+    "appraisalUF": 6450,
+    "mortgage": true
   },
   {
     "id": 2,
-    "title": "Departamento con terraza y vista despejada",
+    "title": "Departamento con terraza",
     "type": "Departamento",
     "location": "Providencia, Región Metropolitana",
     "rooms": 2,
@@ -37,7 +39,10 @@
     "currentUF": 3810,
     "image": 2,
     "condition": "En vivo",
-    "description": "Ejemplo de ficha completa: características, ocupación reportada, galería, documentos autorizados y fechas de inicio y cierre. La documentación de cada publicación debe revisarse antes de tomar una decisión."
+    "description": "Ejemplo de ficha completa: características, ocupación reportada, galería, documentos autorizados y fechas de inicio y cierre. La documentación de cada publicación debe revisarse antes de tomar una decisión.",
+    "appraisalUF": 6000,
+    "mortgage": true,
+    "slug": "departamento-con-terraza-y-vista-despejada-providencia-2"
   },
   {
     "id": 3,
@@ -57,7 +62,9 @@
     "currentUF": 2950,
     "image": 5,
     "condition": "Próxima",
-    "description": "Ejemplo de inmueble comercial. La ficha real debe identificar el origen de cada dato y mostrar solo información validada y autorizada."
+    "description": "Ejemplo de inmueble comercial. La ficha real debe identificar el origen de cada dato y mostrar solo información validada y autorizada.",
+    "appraisalUF": 4200,
+    "mortgage": true
   },
   {
     "id": 4,
@@ -77,7 +84,9 @@
     "currentUF": 6100,
     "image": 18,
     "condition": "Próxima",
-    "description": "Contenido de muestra. La situación de ocupación y las condiciones de visita se deben validar y explicar en la publicación real."
+    "description": "Contenido de muestra. La situación de ocupación y las condiciones de visita se deben validar y explicar en la publicación real.",
+    "appraisalUF": 8150,
+    "mortgage": true
   },
   {
     "id": 5,
@@ -97,11 +106,13 @@
     "currentUF": 4880,
     "image": 3,
     "condition": "Próxima",
-    "description": "En una publicación real se incorporan aquí descripción, superficies, atributos, documentos públicos, condiciones y fechas aprobadas."
+    "description": "En una publicación real se incorporan aquí descripción, superficies, atributos, documentos públicos, condiciones y fechas aprobadas.",
+    "appraisalUF": 7850,
+    "mortgage": true
   },
   {
     "id": 6,
-    "title": "Local comercial con fachada acristalada",
+    "title": "Local comercial acristalado",
     "type": "Local comercial",
     "location": "Las Condes, Región Metropolitana",
     "rooms": 2,
@@ -117,7 +128,10 @@
     "currentUF": 3290,
     "image": 14,
     "condition": "En vivo",
-    "description": "Información de ejemplo para revisar el comportamiento del catálogo y de la ficha. Las imágenes son ilustrativas y no identifican un inmueble publicado."
+    "description": "Información de ejemplo para revisar el comportamiento del catálogo y de la ficha. Las imágenes son ilustrativas y no identifican un inmueble publicado.",
+    "appraisalUF": 5250,
+    "mortgage": true,
+    "slug": "local-comercial-con-fachada-acristalada-las-condes-6"
   },
   {
     "id": 7,
@@ -137,7 +151,9 @@
     "currentUF": 7400,
     "image": 4,
     "condition": "Próxima",
-    "description": "Ficha visual de demostración; antecedentes legales y características reales deben provenir del expediente aprobado."
+    "description": "Ficha visual de demostración; antecedentes legales y características reales deben provenir del expediente aprobado.",
+    "appraisalUF": 10300,
+    "mortgage": true
   },
   {
     "id": 8,
@@ -157,7 +173,9 @@
     "currentUF": 2380,
     "image": 17,
     "condition": "Próxima",
-    "description": "La ficha de propiedad incluye todos los datos públicos desde el inicio y mantiene los documentos privados bajo control de acceso."
+    "description": "La ficha de propiedad incluye todos los datos públicos desde el inicio y mantiene los documentos privados bajo control de acceso.",
+    "appraisalUF": 3700,
+    "mortgage": true
   },
   {
     "id": 9,
@@ -177,11 +195,13 @@
     "currentUF": 4560,
     "image": 11,
     "condition": "Próxima",
-    "description": "Texto ilustrativo. Una publicación aprobada indicará claramente qué está confirmado y qué está pendiente de validar."
+    "description": "Texto ilustrativo. Una publicación aprobada indicará claramente qué está confirmado y qué está pendiente de validar.",
+    "appraisalUF": 6800,
+    "mortgage": true
   },
   {
     "id": 10,
-    "title": "Cabaña rodeada de vegetación nativa",
+    "title": "Cabaña en entorno natural",
     "type": "Casa",
     "location": "Pucón, Región de La Araucanía",
     "rooms": 3,
@@ -197,7 +217,10 @@
     "currentUF": 4010,
     "image": 20,
     "condition": "En vivo",
-    "description": "Propiedad y ubicación de demostración. En el sitio publicado, la ubicación pública puede ser aproximada para resguardar la privacidad."
+    "description": "Propiedad y ubicación de demostración. En el sitio publicado, la ubicación pública puede ser aproximada para resguardar la privacidad.",
+    "appraisalUF": 6500,
+    "mortgage": true,
+    "slug": "cabana-rodeada-de-vegetacion-nativa-pucon-10"
   },
   {
     "id": 11,
@@ -217,7 +240,9 @@
     "currentUF": 2700,
     "image": 8,
     "condition": "Próxima",
-    "description": "Ejemplo de ficha de oficina con distribución, superficies y datos de uso. No representa una oportunidad real."
+    "description": "Ejemplo de ficha de oficina con distribución, superficies y datos de uso. No representa una oportunidad real.",
+    "appraisalUF": 4150,
+    "mortgage": true
   },
   {
     "id": 12,
@@ -237,7 +262,9 @@
     "currentUF": 6950,
     "image": 19,
     "condition": "Próxima",
-    "description": "Demostración de cómo la galería, el estado reportado y los antecedentes se muestran en una sola ficha."
+    "description": "Demostración de cómo la galería, el estado reportado y los antecedentes se muestran en una sola ficha.",
+    "appraisalUF": 11600,
+    "mortgage": true
   },
   {
     "id": 13,
@@ -257,7 +284,9 @@
     "currentUF": 5100,
     "image": 10,
     "condition": "Próxima",
-    "description": "Imagen ilustrativa. No constituye una publicación ni certifica características de una propiedad real."
+    "description": "Imagen ilustrativa. No constituye una publicación ni certifica características de una propiedad real.",
+    "appraisalUF": 7300,
+    "mortgage": true
   },
   {
     "id": 14,
@@ -277,7 +306,9 @@
     "currentUF": 1780,
     "image": 7,
     "condition": "Próxima",
-    "description": "Los atributos y montos de esta tarjeta se usan solo para representar el diseño del prototipo."
+    "description": "Los atributos y valores de esta tarjeta se usan solo para representar el diseño del prototipo.",
+    "appraisalUF": 2350,
+    "mortgage": true
   },
   {
     "id": 15,
@@ -297,7 +328,9 @@
     "currentUF": 3420,
     "image": 1,
     "condition": "Próxima",
-    "description": "La ficha real mostrará el alcance de la revisión legal, las bases y los documentos disponibles."
+    "description": "La ficha real mostrará el alcance de la revisión legal, las bases y los documentos disponibles.",
+    "appraisalUF": 5500,
+    "mortgage": true
   },
   {
     "id": 16,
@@ -317,7 +350,9 @@
     "currentUF": 7900,
     "image": 6,
     "condition": "Próxima",
-    "description": "Ficha de muestra para el catálogo de propiedades. El precio y la información legal no corresponden a una publicación real."
+    "description": "Ficha de muestra para el catálogo de propiedades. El precio y la información legal no corresponden a una publicación real.",
+    "appraisalUF": 11600,
+    "mortgage": true
   },
   {
     "id": 17,
@@ -337,7 +372,9 @@
     "currentUF": 3790,
     "image": 15,
     "condition": "Próxima",
-    "description": "Muestra de ficha; no hay disponibilidad de visita real asociada a esta imagen."
+    "description": "Muestra de ficha; no hay disponibilidad de visita real asociada a esta imagen.",
+    "appraisalUF": 5250,
+    "mortgage": true
   },
   {
     "id": 18,
@@ -357,7 +394,9 @@
     "currentUF": 5320,
     "image": 12,
     "condition": "Próxima",
-    "description": "La persona puede consultar la ficha completa, sin iniciar sesión. Las acciones de participación requieren una cuenta habilitada."
+    "description": "La persona puede consultar la ficha completa, sin iniciar sesión. Las acciones de participación requieren una cuenta habilitada.",
+    "appraisalUF": 8300,
+    "mortgage": true
   },
   {
     "id": 19,
@@ -377,7 +416,9 @@
     "currentUF": 3650,
     "image": 9,
     "condition": "Próxima",
-    "description": "Datos de demostración. La publicación real muestra la fuente y fecha de actualización de los atributos cuando corresponda."
+    "description": "Datos de demostración. La publicación real muestra la fuente y fecha de actualización de los atributos cuando corresponda.",
+    "appraisalUF": 5450,
+    "mortgage": true
   },
   {
     "id": 20,
@@ -397,6 +438,8 @@
     "currentUF": 3580,
     "image": 13,
     "condition": "Próxima",
-    "description": "En esta ficha demostrativa puedes revisar estructura y navegación. No hay inmueble real asociado a este contenido."
+    "description": "En esta ficha demostrativa puedes revisar estructura y navegación. No hay inmueble real asociado a este contenido.",
+    "appraisalUF": 5950,
+    "mortgage": true
   }
 ]

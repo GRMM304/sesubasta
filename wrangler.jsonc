@@ -7,6 +7,9 @@
   "assets": { "directory": "./dist", "binding": "ASSETS", "run_worker_first": true },
   "durable_objects": { "bindings": [{ "name": "APP", "class_name": "SeSubastaApp" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SeSubastaApp"] }],
-  "vars": { "SCRYPT_N": "4096", "DEMO_LIVE_MINUTES": "4320", "DATA_VERSION": "2", "SITE_URL": "https://sesubasta-remates.sesubasta-prototipo-dinamico.workers.dev" },
+  "vars": { "SCRYPT_N": "4096", "DEMO_LIVE_MINUTES": "4320", "DATA_VERSION": "2", "SITE_URL": "https://sesubasta.cl", "MAIL_FROM": "SeSubasta <contacto@sesubasta.cl>" },
+  // Dominio principal. La dirección workers.dev sigue activa solo para pruebas internas.
+  "routes": [{ "pattern": "sesubasta.cl", "custom_domain": true }, { "pattern": "www.sesubasta.cl", "custom_domain": true }],
+  "workers_dev": true,
   "observability": { "enabled": true }
 }

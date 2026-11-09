@@ -1,0 +1,8 @@
+// Worker de correo para contacto@sesubasta.cl (Cloudflare Email Routing). Despliegue: npx wrangler deploy -c cloudflare/correo-contacto/wrangler.jsonc
+{
+  "name": "sesubasta-correo-contacto",
+  "main": "worker.mjs",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": false,
+  "observability": { "enabled": true }
+}

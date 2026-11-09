@@ -2,7 +2,7 @@
    Used by the local server (authoritative) and by the file-only individual preview. */
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.AuctionCore=factory()})(typeof globalThis!=='undefined'?globalThis:this,function(){
 class AuctionError extends Error{constructor(code,message,status=409){super(message);this.code=code;this.status=status}}
-function minorAmount(text){const s=String(text).trim().replace(/\./g,(m,i,str)=>str.indexOf(',')>=0?'':m).replace(',','.');if(!/^\d{1,10}(\.\d{1,2})?$/.test(s))throw new AuctionError('AMOUNT_INVALID','Ingresa un monto positivo con hasta dos decimales.',422);const [a,b='']=s.split('.');const n=Number(a)*100+Number((b+'00').slice(0,2));if(!Number.isSafeInteger(n)||n<=0)throw new AuctionError('AMOUNT_INVALID','El monto no es válido.',422);return n}
+function minorAmount(text){const s=String(text).trim().replace(/\./g,(m,i,str)=>str.indexOf(',')>=0?'':m).replace(',','.');if(!/^\d{1,10}(\.\d{1,2})?$/.test(s))throw new AuctionError('AMOUNT_INVALID','Ingresa una oferta positiva con hasta dos decimales.',422);const [a,b='']=s.split('.');const n=Number(a)*100+Number((b+'00').slice(0,2));if(!Number.isSafeInteger(n)||n<=0)throw new AuctionError('AMOUNT_INVALID','La oferta no es válida.',422);return n}
 function auctionFrom(p,i,at,o={}){const active=p.condition==='En vivo';const live=o.liveMinutes?[o.liveMinutes,o.liveMinutes+60]:[15,30];const start=active?at-60000:at+(i+1)*3600000;const end=active?at+(p.id===2?live[0]:live[1])*60000:start+86400000;return {id:p.id,start,end,status:'scheduled',initialMinor:Math.round(p.minUF*100),currentMinor:Math.round(p.minUF*100),incrementMinor:5000,unit:'UF',termsVersion:'demo-2026-10-v4',version:0,sequence:0,bids:[],keys:{},events:[]}}
 function seed(rows,at=Date.now(),o={}){return {schema:2,auctions:Object.fromEntries(rows.map((p,i)=>[String(p.id),auctionFrom(p,i,at,o)]))}}
 const clone=v=>JSON.parse(JSON.stringify(v));
@@ -17,18 +17,18 @@ class Engine{
  ranking(id){const a=this.get(id);const best=a.bids.at(-1)||null;let runner=null;if(best){for(let i=a.bids.length-2;i>=0;i--){if(a.bids[i].buyer!==best.buyer){runner=a.bids[i];break}}}return {best,runner}}
  submit({id,buyer,amountMinor,unit,termsVersion,key,expectedVersion}){
   const a=this.get(id);
-  if(!buyer)throw new AuctionError('AUTH_REQUIRED','Inicia sesión para subastar.',401);
+  if(!buyer)throw new AuctionError('AUTH_REQUIRED','Inicia sesión para ofertar.',401);
   if(typeof key!=='string'||!/^[a-zA-Z0-9_-]{8,100}$/.test(key))throw new AuctionError('KEY_INVALID','La solicitud necesita una referencia válida.',422);
   const sk=buyer+':'+key,existing=a.keys[sk];
-  if(existing){if(existing.amountMinor!==amountMinor||existing.unit!==unit||existing.termsVersion!==termsVersion)throw new AuctionError('KEY_REUSED','La referencia ya se utilizó con otro monto.');return {receipt:{...existing},snapshot:this.snapshot(id),duplicate:true}}
+  if(existing){if(existing.amountMinor!==amountMinor||existing.unit!==unit||existing.termsVersion!==termsVersion)throw new AuctionError('KEY_REUSED','La referencia ya se utilizó con otra oferta.');return {receipt:{...existing},snapshot:this.snapshot(id),duplicate:true}}
   const status=this.status(a);
-  if(status==='paused')throw new AuctionError('AUCTION_PAUSED','La subasta está suspendida. No se reciben montos por ahora.');
+  if(status==='paused')throw new AuctionError('AUCTION_PAUSED','La subasta está suspendida. No se reciben ofertas por ahora.');
   if(status!=='open')throw new AuctionError('AUCTION_NOT_OPEN','La subasta no está abierta.');
   if(termsVersion!==a.termsVersion)throw new AuctionError('TERMS_CHANGED','Las condiciones cambiaron. Revísalas nuevamente.');
-  if(unit!==a.unit||!Number.isSafeInteger(amountMinor)||amountMinor<=0||amountMinor>999999999999)throw new AuctionError('AMOUNT_INVALID','Revisa el monto y la unidad.',422);
+  if(unit!==a.unit||!Number.isSafeInteger(amountMinor)||amountMinor<=0||amountMinor>999999999999)throw new AuctionError('AMOUNT_INVALID','Revisa la oferta y la unidad.',422);
   if(!Number.isInteger(expectedVersion)||expectedVersion!==a.version)throw new AuctionError('AUCTION_CHANGED','Hay una actualización. Revisa el nuevo mínimo y confirma nuevamente.');
   const next=a.bids.length?a.currentMinor+a.incrementMinor:a.initialMinor;
-  if(amountMinor<next)throw new AuctionError('AMOUNT_TOO_LOW','El monto es menor al mínimo vigente.',422);
+  if(amountMinor<next)throw new AuctionError('AMOUNT_TOO_LOW','La oferta es menor al mínimo vigente.',422);
   const previousLeader=a.bids.at(-1)?.buyer||null;
   const newState=clone(this.state),n=newState.auctions[String(id)];
   const receipt={id:n.id,buyer,amountMinor,unit,termsVersion,receipt:'SS-DEMO-'+id+'-'+(n.sequence+1),time:this.clock(),sequence:n.sequence+1};

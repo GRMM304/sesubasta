@@ -137,6 +137,66 @@ RESEND_API_KEY=re_xxxxxxxx MAIL_FROM="SeSubasta <avisos@sesubasta.cl>" SITE_URL=
 
 Si el proveedor falla, el mensaje se reintenta hasta 3 veces. Cada correo incluye la cabecera List-Unsubscribe para la baja con un clic en Gmail y Outlook.
 
+## Dominio sesubasta.cl, portada "Muy pronto" y mapa
+
+- **Dominio:** `wrangler.jsonc` publica el sitio en `sesubasta.cl` y `www.sesubasta.cl` (dominios personalizados de Workers). La dirección `workers.dev` sigue activa solo para pruebas internas.
+- **Portada:** sin la clave del equipo solo se ve la portada "Muy pronto" (`servidor/acceso.cjs`), con una foto ilustrativa, Instagram, Facebook y el acceso del equipo. Cualquier otra URL, incluidas las del API, responde 401 sin la clave. La clave es el secreto `SITE_PASSWORD` de Cloudflare; no está en el código. Para cambiarla, usa `npm run cf:clave`.
+- **Mapa:** en la ficha interna se escribe solo la dirección y se presiona **Ubicar en el mapa**. El servidor consulta una vez el geocodificador (`servidor/geocodificador.cjs`, Nominatim/OpenStreetMap) y el mapa Leaflet muestra el marcador para revisarlo. Las coordenadas se guardan con el borrador. Si cambia la dirección, hay que volver a ubicarla. La ficha pública muestra la dirección y el marcador solo si se marca "Mostrar la dirección y el marcador exacto"; si no, muestra la zona aproximada de la comuna. Para cambiar de proveedor, se agrega en `PROVIDERS` y se usa `GEOCODER_PROVIDER`.
+- **Redes:** solo Instagram (`https://www.instagram.com/sesubasta.cl`) y Facebook.
+
+## Correos contacto@ y garantias@sesubasta.cl (solo reenvío)
+
+Cloudflare Email Routing está activo en `sesubasta.cl` (MX `route1/2/3.mx.cloudflare.net`, SPF y DKIM los agregó Cloudflare). Dos reglas, `to: contacto@sesubasta.cl` y `to: garantias@sesubasta.cl`, envían cada mensaje al Worker `sesubasta-correo-contacto` (`cloudflare/correo-contacto/`). El Worker lo reenvía sin cambios, con adjuntos, a `jvalenzuela@grupomm.cl`, `eorrego@grupomm.cl`, `raguilera@grupomm.cl`, `frojas@grupomm.cl` e `ibarboza@grupomm.cl` (cada una debe estar verificada en Email Routing). No hay catch-all: las demás direcciones del dominio se rechazan. Las direcciones aceptadas están en `DIRECCIONES`: una dirección nueva necesita estar ahí y tener su regla (`npx wrangler email routing rules create sesubasta.cl --match-type literal --match-field to --match-value nueva@sesubasta.cl --action-type worker --action-value sesubasta-correo-contacto`). Para cambiar las destinatarias, edita `DESTINATARIOS`, verifica la nueva dirección (`npx wrangler email routing addresses create correo@…`) y publica con `npx wrangler deploy -c cloudflare/correo-contacto/wrangler.jsonc`.
+
+## Correos transaccionales (plantillas)
+
+Remitente: **SeSubasta <contacto@sesubasta.cl>**. El dominio sesubasta.cl está autenticado en Brevo (SPF, DKIM y DMARC). Las respuestas a esos correos llegan a contacto@ y se reenvían al equipo.
+
+
+Hay 23 plantillas con la marca de SeSubasta, una por tipo de correo. Están en `servidor/plantillas.cjs` y se agrupan así:
+- **Cuenta:** verificación, recuperación y cambio de contraseña, eliminación de cuenta y aviso general.
+- **Solicitudes:** venta recibida, consulta recibida y respuesta del equipo.
+- **Subastas:** comprobante de monto, monto superado, cierre próximo, suspensión/reanudación/cancelación, resultado y mensaje del equipo.
+- **Alertas:** propiedad guardada, nueva propiedad y blog.
+- **Equipo:** código MFA, invitación, recuperación de acceso, avisos internos y tareas.
+- **Sistema:** correo de prueba.
+
+En **Gestión → Configuración → Correo** puedes ver cada plantilla, enviarte una prueba y usar **Publicar/Actualizar plantillas en Brevo**. Al publicarlas, se crean en la cuenta de Brevo conectada con el nombre "SeSubasta · …". Desde ese momento, el sitio envía con `templateId` y parámetros (`params.titulo`, `params.parrafos`, `params.detalles`, `params.enlace`, `params.boton`, `params.codigo`, `params.baja`, `params.preferencias`). Así, el diseño se puede editar en Brevo (Campañas → Plantillas) sin tocar el código. Si una plantilla no está publicada, o no hay Brevo, el sitio usa su copia interna con el mismo diseño. Volver a publicar sobrescribe en Brevo los cambios hechos allí.
+
+## Garantía de seriedad por remate (sin billetera)
+
+Sirve para comprometer a quienes subastan sin mantener saldos a nombre de nadie. Cada garantía corresponde a una sola subasta.
+
+1. **Configuración.** El Administrador general completa **Configuración → Cuenta para garantías**: titular, RUT, banco, tipo y número de cuenta, y plazo de devolución. Conviene que sea una cuenta exclusiva para garantías.
+2. **Monto por propiedad.** En la ficha, pestaña **Condiciones**, se indica la **Garantía de seriedad (pesos)**. Vacío significa que no se exige. Aplica desde que se aprueba la publicación.
+3. **Comprador.** En la sala ve el aviso **Constituir garantía**, registra su cuenta de devolución, que debe estar a su nombre y se valida el RUT, y recibe por correo un código `GAR-…`. Transfiere el monto con ese código en el comentario y luego presiona **Ya transferí**. Ve todo en **Mi cuenta → Garantías**.
+4. **Equipo.** El Operador o el Administrador general revisa **Gestión → Garantías → Por verificar** contra la cartola y confirma el ingreso con la referencia. Desde ese momento la persona puede subastar.
+5. **Cierre automático.**
+   - Las garantías del primer y del segundo lugar quedan retenidas.
+   - Las demás pasan a **Por devolver** y la persona recibe un aviso.
+   - Al confirmar la adjudicación, la del adjudicatario se abona al precio y la del segundo pasa a devolución.
+   - Si se cancela la subasta, todas pasan a devolución.
+6. **Devolución.** Se transfiere desde el banco a la cuenta registrada y se registra el N° de operación. Por doble control, la devolución la registra **una persona distinta** de quien confirmó el ingreso.
+7. **Retención por incumplimiento.** Solo la decide el Administrador general, con un motivo que la persona recibe por correo.
+
+Cada cambio de estado queda en el historial de la garantía y en Auditoría. Los avisos sobre garantías se envían siempre, aunque la persona se haya dado de baja de las alertas. El servidor bloquea cualquier monto de quien no tiene la garantía confirmada (`GUARANTEE_REQUIRED`). Código: `servidor/garantias.cjs` y `fuentes/app/garantias.js`.
+
+**Pendiente para producción:**
+- Conciliación automática de ingresos y devoluciones con una API bancaria o de pagos (por ejemplo Fintoc).
+- Verificación de identidad con un proveedor (FirmaVirtual u otro) antes de constituir la garantía.
+- Cifrado de los datos bancarios guardados.
+- Revisión legal del texto de las bases.
+
+## Terminología: oferta y ofertar
+
+Quien participa hace una **oferta** y **oferta**; no se habla de "montos" ni de "subastar" para esa acción. El valor de partida es el **precio inicial** y el mayor registrado es la **oferta vigente**. El importe de la garantía sigue llamándose "monto" porque es dinero transferido, no una oferta. Las frases están en `servidor/terminologia.cjs`; la misma lista corrigió una vez (`config.copyVersion`) las bases, preguntas frecuentes, "Cómo funciona" y el blog ya guardados, sin cambiar los slugs.
+
+## Tarjetas con tasación y crédito hipotecario
+
+Cada ficha tiene **Valor de tasación (UF)** y la casilla **Admite pago con crédito hipotecario** (Gestión → Propiedades → Datos generales). La tarjeta muestra el % bajo tasación (sobre la oferta vigente, o el precio inicial si no hay ofertas; se actualiza en vivo), la siguiente oferta mínima, el aviso de crédito y los botones **Ver tasación** (lleva a `#tasacion` de la ficha) y **Ofertar**. Sin tasación, la tarjeta no muestra descuento y el botón dice "Ver ficha".
+
+**Reiniciar las subastas de prueba:** `servidor/demo.cjs` deja las 20 propiedades de demostración en vivo (cierres escalonados entre ~1 y ~3 días; el departamento de Providencia con 3 ofertas) sin tocar usuarios, configuración, correo, analítica ni la cuenta de garantías. Se ejecuta una vez por valor de `DEMO_RESET` en `servidor/migracion.cjs`: súbelo en 1 y ejecuta `npm run cf:deploy` para repetirlo. (Subir `DATA_VERSION` en cambio borra todo y empieza de cero.)
+
 ## Logos y redes sociales
 
 - **Pie de página:** logo vertical oficial en negativo (`assets/marca/logo-sesubasta-vertical-negativo.png`), una copia web del archivo "Identidad SeSubasta-10".
