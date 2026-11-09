@@ -13,5 +13,16 @@
   // Dominio principal. La dirección workers.dev sigue activa solo para pruebas internas.
   "routes": [{ "pattern": "sesubasta.cl", "custom_domain": true }, { "pattern": "www.sesubasta.cl", "custom_domain": true }],
   "workers_dev": true,
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Ambiente de pruebas (stage): otro Worker con sus propios datos, sin dominio propio y sin correos reales.
+  // Despliegue: npx wrangler deploy --env stage (Workers Builds lo hace al subir la rama por-publicar).
+  "env": {
+    "stage": {
+      "name": "sesubasta-remates-stage",
+      "durable_objects": { "bindings": [{ "name": "APP", "class_name": "SeSubastaApp" }] },
+      "vars": { "SCRYPT_N": "4096", "DEMO_LIVE_MINUTES": "4320", "DATA_VERSION": "1", "SITE_URL": "https://sesubasta-remates-stage.sesubasta-prototipo-dinamico.workers.dev", "MAIL_FROM": "SeSubasta <contacto@sesubasta.cl>" },
+      "routes": [],
+      "workers_dev": true
+    }
+  }
 }
