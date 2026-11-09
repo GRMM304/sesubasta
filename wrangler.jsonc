@@ -2,6 +2,8 @@
 {
   "name": "sesubasta-remates",
   "main": "cloudflare/worker.mjs",
+  // Genera dist/ antes de cada despliegue (también en Workers Builds al subir a GitHub).
+  "build": { "command": "node scripts/preparar-cloudflare.cjs" },
   "compatibility_date": "2025-09-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": { "directory": "./dist", "binding": "ASSETS", "run_worker_first": true },
