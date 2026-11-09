@@ -12,6 +12,9 @@ function migrate(d){
  if((d.config.socialVersion||0)<3){d.config.social={...SOCIAL};d.config.socialVersion=3}
  // Manual de Marca v2.0: el titular de inicio no termina en punto y usa dos pesos.
  if(d.config.homeTitle==='Subasta en vivo, con información clara.')d.config.homeTitle='Revisa *antes* de decidir|Subastas de propiedades en vivo';
+ // Inicio nuevo (nov. 2026): no son subastas en vivo. Solo cambia los textos que nadie editó desde Gestión.
+ if(d.config.homeTitle==='Revisa *antes* de decidir|Subastas de propiedades en vivo')d.config.homeTitle='Revisa *antes* de decidir|Propiedades sin barreras';
+ if(d.config.homeLead==='Explora propiedades, revisa sus antecedentes y oferta en vivo hasta el cierre. Sin inscripción por propiedad.')d.config.homeLead='Explora propiedades, revisa sus antecedentes y oferta hasta el cierre. Sin inscripción por propiedad.';
  // Dominio sesubasta.cl autenticado en Brevo (oct. 2026): los correos salen desde contacto@sesubasta.cl.
  if(d.config.mailFromVersion!==2){if(!d.config.mailFrom||/oficina@grupomm\.cl/i.test(d.config.mailFrom))d.config.mailFrom='SeSubasta <contacto@sesubasta.cl>';d.config.mailFromVersion=2}
  d.whatsapp=d.whatsapp||[];d.tasks=d.tasks||[];
