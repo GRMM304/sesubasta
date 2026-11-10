@@ -3,7 +3,7 @@ const D=require('./dominio.cjs');
 const T=require('./terminologia.cjs');
 const {resetDemo}=require('./demo.cjs');
 const {addExtraBlog,applyLongBodies}=require('./blog-extra.cjs');
-const DEMO_RESET=2;
+const DEMO_RESET=3;
 const SOCIAL={instagram:'https://www.instagram.com/sesubasta.cl',facebook:'https://www.facebook.com/sesubasta.cl'};
 function migrate(d){
  // Cada ficha publicada conserva la versión pública aprobada separada de las ediciones privadas posteriores.
@@ -35,7 +35,8 @@ function migrate(d){
   for(const p of d.posts||[])for(const k of ['title','excerpt','body','metaDescription','seoTitle'])p[k]=T.apply(p[k]);
   c.copyVersion=1}
  // Reinicio de las subastas de prueba: 1 (27 oct. 2026) tarjetas con tasación; 2 (nov. 2026) subastas de a una,
- // horas exactas, títulos con la dirección y crédito hipotecario solo en algunas.
+ // horas exactas, títulos con la dirección y crédito hipotecario solo en algunas; 3 (nov. 2026) precios iniciales
+ // entre 30 % y 35 % bajo tasación y garantía de seriedad de $1.000.000.
  // Para repetirlo, sube DEMO_RESET y publica.
  if((d.config.demoResetVersion||0)<DEMO_RESET){resetDemo(d);d.config.demoResetVersion=DEMO_RESET}
  // Prueba del flujo de garantía pedida por Dirección (27 oct. 2026): "Casa urbana con jardín y terraza" (SS-0020) exige $5.000.

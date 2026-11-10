@@ -18,7 +18,7 @@ const STAFF_NAV=[
 const staffNav=()=>STAFF_NAV.filter(n=>!n.roles.length||hasRole(...n.roles));
 
 /* Menú principal (botón «Menú» a la izquierda). Un elemento con hijos se muestra como grupo. */
-const PUBLIC_LINKS=[['/remates','Remates'],['/blog','Blog'],['/quienes-somos','Quiénes somos'],['Cómo funciona',[['/como-funciona/compradores','Para los compradores'],['/como-funciona/vendedores','Para los vendedores']]],['/ingresar-inmueble/formulario','Vende con nosotros'],['/contacto','Contacto']];
+const PUBLIC_LINKS=[['/remates','Todas las propiedades'],['/blog','Blog y noticias'],['/quienes-somos','Quiénes somos'],['Cómo funciona',[['/como-funciona/compradores','Para los compradores'],['/como-funciona/vendedores','Para los vendedores']]],['/ingresar-inmueble/formulario','Vende con nosotros'],['/contacto','Contacto']];
 const isActive=(path,link)=>link==='/'?path==='/':path===link||path.startsWith(link+'/');
 function chrome(r,path){const area=r.area||'public';document.body.dataset.area=area;document.body.classList.toggle('has-sticky',!!r.sticky);
  const top=$('#topbar'),nav=$('#bottomNav'),foot=$('#footer'),banner=$('#demoBanner');
@@ -45,11 +45,13 @@ function chrome(r,path){const area=r.area||'public';document.body.dataset.area=a
   <p class="footer-legal">© ${new Date().getFullYear()} SeSubasta.cl · Prototipo con propiedades, imágenes y valores ilustrativos. Sin pagos ni efectos jurídicos.</p>`)}
 actions.menu=el=>{const open=el.getAttribute('aria-expanded')==='true';$('#mobileMenu')?.remove();el.setAttribute('aria-expanded',String(!open));if(open)return;const path=currentUrl().pathname;const m=document.createElement('nav');m.id='mobileMenu';m.className='mobile-menu';m.setAttribute('aria-label','Menú');
  const link=([p,l])=>h`<a href="${href(p)}" ${isActive(path,p)?raw('aria-current="page"'):''}>${l}</a>`;
- m.innerHTML=toHtml(h`${PUBLIC_LINKS.map(([p,l])=>Array.isArray(l)?h`<div class="menu-group"><span>${p}</span>${l.map(link)}</div>`:link([p,l]))}`);
+ m.innerHTML=toHtml(h`${PUBLIC_LINKS.map(([p,l])=>Array.isArray(l)?(open=>h`<div class="menu-group"><button type="button" class="menu-toggle" aria-expanded="${open}" data-action="menu-group">${p}${icon('chevron')}</button><div class="menu-sub" ${open?'':raw('hidden')}>${l.map(link)}</div></div>`)(l.some(([q])=>isActive(path,q))):link([p,l]))}`);
  $('#topbar').after(m);m.style.top=$('#topbar').getBoundingClientRect().bottom+'px';m.querySelector('a').focus();
  const close=()=>{m.remove();el.setAttribute('aria-expanded','false');document.removeEventListener('click',outside)};
  const outside=e=>{if(!m.contains(e.target)&&!el.contains(e.target))close()};setTimeout(()=>document.addEventListener('click',outside));
  m.addEventListener('keydown',e=>{if(e.key==='Escape'){close();el.focus()}})};
+/* Grupo del menú (Cómo funciona): se despliega al tocarlo. */
+actions['menu-group']=el=>{const open=el.getAttribute('aria-expanded')!=='true';el.setAttribute('aria-expanded',String(open));el.nextElementSibling.hidden=!open};
 actions.back=el=>back(el.dataset.fallback||'/');
 actions.currency=el=>{state.currency=el.dataset.value;store.set('ss-currency',state.currency);Analytics.event('currency_changed',{currency:state.currency});render({keepScroll:true})};
 actions['staff-menu']=()=>{openDialog({title:'Menú del equipo',body:h`<nav class="staff-menu-list">${staffNav().map(n=>h`<a href="${href(n.path)}" data-close>${icon(n.icon)} ${n.label}</a>`)}<a href="${href('/gestion/mi-perfil')}" data-close>${icon('user')} Mi perfil</a><button class="link-btn" data-action="staff-logout" data-close>${icon('logout')} Cerrar sesión</button></nav>`})};

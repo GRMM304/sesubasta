@@ -26,10 +26,12 @@ function resetDemo(d,now=Date.now()){
  d.properties.filter(p=>p.demo&&p.auctionId&&rows.has(p.id)).forEach((p,i)=>{const r=rows.get(p.id);const aid=String(p.auctionId);ids.add(aid);
   const pl=plan[p.id]||{start:now+DAY*(30+i),end:now+DAY*(31+i),bids:[]};const {start,end}=pl;
   const a={id:p.auctionId,start,end,status:'scheduled',initialMinor:Math.round(r.minUF*100),currentMinor:Math.round(r.minUF*100),incrementMinor:5000,unit:'UF',termsVersion:d.config.termsVersion,version:0,sequence:0,bids:[],keys:{},events:[]};
-  // La ficha destacada del mockup llega con 3 ofertas registradas (3.800, 3.850 y 3.900 UF).
-  if(p.id===2)[['camila',380000,50],['alex',385000,30],['camila',390000,10]].forEach(([buyer,amountMinor,ago])=>{a.sequence++;a.version++;const b={id:a.id,buyer,amountMinor,unit:'UF',termsVersion:a.termsVersion,receipt:`SS-DEMO-${a.id}-${a.sequence}`,time:now-ago*60000,sequence:a.sequence};a.bids.push(b);a.keys[buyer+':seed_'+a.sequence]=b;a.currentMinor=amountMinor});
+  // La ficha destacada del mockup llega con 3 ofertas registradas desde su precio inicial.
+  const m2=Math.round(r.minUF*100);if(p.id===2)[['camila',m2,50],['alex',m2+5000,30],['camila',m2+10000,10]].forEach(([buyer,amountMinor,ago])=>{a.sequence++;a.version++;const b={id:a.id,buyer,amountMinor,unit:'UF',termsVersion:a.termsVersion,receipt:`SS-DEMO-${a.id}-${a.sequence}`,time:now-ago*60000,sequence:a.sequence};a.bids.push(b);a.keys[buyer+':seed_'+a.sequence]=b;a.currentMinor=amountMinor});
   applyPlan(a,{...pl,bids:p.id===2?[]:pl.bids},now);
   d.subastas.auctions[aid]=a;
+  // Garantía de seriedad de Dirección (nov. 2026): $1.000.000 por propiedad (la de prueba de $5.000 se mantiene).
+  if(p.conditions?.guaranteeCLP===5000000)p.conditions.guaranteeCLP=1000000;
   Object.assign(p,{title:r.title,appraisalUF:r.appraisalUF??null,mortgage:r.mortgage===true,conditions:{...p.conditions,opensAt:start,closesAt:end,initialUF:r.minUF,incrementUF:50},reviewStatus:'approved',publicStatus:'published',updatedAt:now});
   p.live=D.publicFields(p)});
  d.attempts=d.attempts.filter(x=>!ids.has(String(x.auctionId)));
