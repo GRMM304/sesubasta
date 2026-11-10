@@ -221,17 +221,15 @@ body[data-area=staff] .demo-banner{background:#2a1c6b;color:#E8E4F7;border-color
 .discount-badge{position:absolute;right:10px;bottom:10px;display:grid;justify-items:center;background:var(--lime);color:var(--navy);border-radius:14px;padding:8px 14px 7px;box-shadow:0 4px 14px #0e013d33;line-height:1}
 .discount-badge strong{font-family:var(--font-title);font-weight:800;font-size:38px;letter-spacing:-.02em}
 .discount-badge small{font-family:var(--font-title);font-weight:800;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;margin-top:5px}
-.discount-badge.dark{background:var(--navy);color:#fff}
 .current-price{display:block;font-family:var(--font-title);font-size:36px;font-weight:800;line-height:1.1;color:var(--navy);white-space:nowrap}
 .card-countdown{display:flex;align-items:center;gap:8px;font-family:var(--font-title);font-weight:800;font-size:18px;color:var(--violet);margin:14px 0 2px;font-variant-numeric:tabular-nums}.card-countdown .ico{width:24px;height:24px;color:var(--navy)}
 .participants{color:var(--muted);font-size:13px;margin:0}
-.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;padding-top:12px}
-.card-actions .btn-primary{grid-column:1/-1}
+.card-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:auto;padding-top:12px}
 .card-facts{list-style:none;margin:8px 0 0;padding:0 0 10px;display:flex;flex-wrap:nowrap;gap:14px;border-bottom:1px solid var(--line);color:var(--navy);font-size:14px;font-weight:600}
 .card-facts li{display:flex;align-items:center;gap:5px;min-width:0;flex:none}.card-facts li:first-child{flex:0 1 auto}.card-facts li>span:first-of-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .card-facts .ico{flex:none;width:18px;height:18px;color:var(--violet)}
-.mortgage-flag{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;background:var(--cloud);color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap}
-.mortgage-flag .ico{width:15px;height:15px}.mortgage-flag.yes{background:#F0EEFA;color:var(--navy)}.mortgage-flag.yes .ico{color:var(--violet)}
+.mortgage-flag{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;background:#F0EEFA;color:var(--navy);font-size:12px;font-weight:700;white-space:nowrap}
+.mortgage-flag .ico{width:15px;height:15px;color:var(--violet)}
 .card-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-size:14px;color:var(--muted)}
 .card-meta strong{font-family:var(--font-title);font-size:17px;font-weight:800;color:var(--navy);margin-left:4px;white-space:nowrap}
 .card-stats{margin:10px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -249,7 +247,7 @@ body[data-area=staff] .demo-banner{background:#2a1c6b;color:#E8E4F7;border-color
 .top-bids li{counter-increment:top;display:flex;align-items:center;gap:8px;background:var(--cloud);border-radius:8px;padding:5px 8px;font-size:12px;color:var(--muted)}
 .top-bids li:before{content:counter(top);display:grid;place-items:center;flex:none;width:20px;height:20px;border-radius:6px;background:var(--navy);color:var(--lime);font-family:var(--font-title);font-weight:800;font-size:12px}
 .top-bids strong{color:var(--navy);font-size:14px;margin-right:auto}
-.property-card .card-actions .btn{min-height:42px;font-size:14px;padding:0 10px;white-space:nowrap}
+.property-card .card-actions .btn{min-height:42px;font-size:12.5px;padding:0 4px;white-space:nowrap;letter-spacing:-.01em}
 .property-card [data-live-cta].btn-primary{background:var(--lime);color:var(--navy)}.property-card [data-live-cta].btn-primary:hover{background:#b8f21f;color:var(--navy)}
 #credito h2 .ico{width:26px;height:26px;vertical-align:-5px;color:var(--violet)}
 
@@ -557,7 +555,7 @@ body[data-area=staff] .cookie-banner{display:none}
  .sticky-panel{position:sticky;top:110px}
 }
 @media(min-width:1600px){.catalog-results .property-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:374px){.topbar{gap:4px}.brand img,body:not([data-area=staff]) .brand img{width:96px}.currency-switch button{min-width:36px;padding:4px 6px}.card-actions{grid-template-columns:1fr}.price-band strong{font-size:17px}}
+@media(max-width:374px){.topbar{gap:4px}.brand img,body:not([data-area=staff]) .brand img{width:96px}.currency-switch button{min-width:36px;padding:4px 6px}.price-band strong{font-size:17px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media print{.topbar,.bottom-nav,.footer,.sticky-subastar,.cookie-banner,.demo-banner{display:none!important}}
 
@@ -620,3 +618,35 @@ a.staff-who{color:#fff;text-decoration:none}
 .home-search .text-link{justify-self:center;font-weight:700}
 @media(min-width:560px){.home-search-fields{grid-template-columns:1fr 1fr}.home-search-fields label:last-child{grid-column:1/-1}}
 @media(min-width:1200px){.home-search{padding:28px 32px}}
+
+/* Foto de la tarjeta: sombreado oscuro desde abajo para que el descuento y la cuenta regresiva se lean sobre cualquier imagen. */
+.property-card .image-wrap:after{content:"";position:absolute;left:0;right:0;bottom:0;height:60%;background:linear-gradient(to top,#0e013dd9,#0e013d00);pointer-events:none}
+.property-card .discount-badge,.property-card .photo-countdown{z-index:1}
+/* Suspendida: bloqueada, solo con el aviso y su motivo. */
+.property-card.is-blocked{pointer-events:none;user-select:none}
+.property-card.is-blocked .property-image{filter:grayscale(1) brightness(.85)}
+.suspended-note{display:flex;gap:10px;align-items:flex-start;margin-top:10px;background:#FFF6D6;border:1px solid #F2DD8C;border-radius:12px;padding:12px;color:var(--navy)}
+.suspended-note .ico{flex:none;width:20px;height:20px;margin-top:2px}.suspended-note strong{display:block}.suspended-note p{margin:2px 0 0;font-size:14px;color:var(--slate)}
+/* Carruseles de inicio (próximas y destacados) */
+.carousel{position:relative}
+.carousel-track{display:grid;grid-auto-flow:column;grid-auto-columns:86%;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 12px;overscroll-behavior-x:contain}
+.carousel-track::-webkit-scrollbar{display:none}
+.carousel-item{scroll-snap-align:start;display:flex}.carousel-item>.property-card{flex:1}
+.carousel-btn{position:absolute;top:38%;z-index:2;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--navy);display:none;place-items:center;box-shadow:var(--shadow)}
+.carousel-btn.prev{left:-14px}.carousel-btn.next{right:-14px}
+@media(min-width:768px){.carousel-track{grid-auto-columns:calc((100% - 16px)/2)}.carousel-btn{display:grid}}
+@media(min-width:1200px){.carousel-track{grid-auto-columns:calc((100% - 32px)/3)}.carousel-btn.prev{left:-22px}.carousel-btn.next{right:-22px}}
+/* Cómo funciona: selección de perfil */
+.how-choice{display:grid;gap:14px}
+.how-option{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;column-gap:14px;row-gap:4px;align-items:center;padding:20px;border:1.5px solid var(--line);border-radius:18px;background:#fff;color:var(--navy);text-decoration:none;box-shadow:0 4px 16px #0e013d08}
+.how-option>.ico:first-child{grid-row:1/3;width:40px;height:40px;padding:8px;border-radius:12px;background:var(--navy);color:var(--lime)}
+.how-option strong{font-family:var(--font-title);font-size:20px}.how-option span{grid-column:2;color:var(--muted)}
+.how-option>.ico:last-child{grid-row:1/3;grid-column:3;color:var(--violet)}
+.how-option:hover{border-color:var(--violet);color:var(--navy)}
+@media(min-width:768px){.how-choice{grid-template-columns:1fr 1fr}}
+/* Pie: acceso del equipo a la intranet */
+.intranet-btn{margin-top:14px;display:inline-flex;align-items:center;gap:6px}.intranet-btn .ico{width:16px;height:16px}
+.footer .intranet-btn,.footer .intranet-btn:hover{color:var(--navy)}
+/* Tarjeta angosta: los 3 botones siguen en una fila y el texto pasa a dos renglones. */
+.property-card{container-type:inline-size}
+@container (max-width:380px){.property-card .card-actions .btn{white-space:normal;line-height:1.15;font-size:12px;text-align:center}}

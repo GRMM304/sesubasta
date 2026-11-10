@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "title": "Casa luminosa con patio arbolado",
+    "title": "Av. Irarrázaval 3450",
     "type": "Casa",
     "location": "Ñuñoa, Región Metropolitana",
     "rooms": 3,
@@ -19,11 +19,11 @@
     "condition": "Próxima",
     "description": "Ficha demostrativa para mostrar cómo se organiza la información de una casa. Antes de participar revisa los antecedentes, las condiciones y el estado informado de la propiedad.",
     "appraisalUF": 6450,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 2,
-    "title": "Departamento con terraza",
+    "title": "Av. Providencia 2133, depto. 1204",
     "type": "Departamento",
     "location": "Providencia, Región Metropolitana",
     "rooms": 2,
@@ -46,7 +46,7 @@
   },
   {
     "id": 3,
-    "title": "Oficina abierta en edificio de servicios",
+    "title": "Huérfanos 1160, of. 702",
     "type": "Oficina",
     "location": "Santiago Centro, Región Metropolitana",
     "rooms": 4,
@@ -68,7 +68,7 @@
   },
   {
     "id": 4,
-    "title": "Casa contemporánea con jardín",
+    "title": "Av. Larraín 6120",
     "type": "Casa",
     "location": "La Reina, Región Metropolitana",
     "rooms": 4,
@@ -90,7 +90,7 @@
   },
   {
     "id": 5,
-    "title": "Casa de estilo mediterráneo",
+    "title": "Av. Grecia 8735",
     "type": "Casa",
     "location": "Peñalolén, Región Metropolitana",
     "rooms": 3,
@@ -108,11 +108,11 @@
     "condition": "Próxima",
     "description": "En una publicación real se incorporan aquí descripción, superficies, atributos, documentos públicos, condiciones y fechas aprobadas.",
     "appraisalUF": 7850,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 6,
-    "title": "Local comercial acristalado",
+    "title": "Av. Apoquindo 4499, local 3",
     "type": "Local comercial",
     "location": "Las Condes, Región Metropolitana",
     "rooms": 2,
@@ -135,7 +135,7 @@
   },
   {
     "id": 7,
-    "title": "Casa moderna con piscina",
+    "title": "Camino Chicureo 1850",
     "type": "Casa",
     "location": "Colina, Región Metropolitana",
     "rooms": 4,
@@ -153,11 +153,11 @@
     "condition": "Próxima",
     "description": "Ficha visual de demostración; antecedentes legales y características reales deben provenir del expediente aprobado.",
     "appraisalUF": 10300,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 8,
-    "title": "Departamento renovado con cocina abierta",
+    "title": "Av. San Pablo 4211, depto. 508",
     "type": "Departamento",
     "location": "Quinta Normal, Región Metropolitana",
     "rooms": 2,
@@ -175,11 +175,11 @@
     "condition": "Próxima",
     "description": "La ficha de propiedad incluye todos los datos públicos desde el inicio y mantiene los documentos privados bajo control de acceso.",
     "appraisalUF": 3700,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 9,
-    "title": "Casa chilena con patio sombreado",
+    "title": "Av. Pedro de Valdivia 3970",
     "type": "Casa",
     "location": "Ñuñoa, Región Metropolitana",
     "rooms": 3,
@@ -201,7 +201,7 @@
   },
   {
     "id": 10,
-    "title": "Cabaña en entorno natural",
+    "title": "Camino Pucón-Caburgua km 8",
     "type": "Casa",
     "location": "Pucón, Región de La Araucanía",
     "rooms": 3,
@@ -219,12 +219,12 @@
     "condition": "En vivo",
     "description": "Propiedad y ubicación de demostración. En el sitio publicado, la ubicación pública puede ser aproximada para resguardar la privacidad.",
     "appraisalUF": 6500,
-    "mortgage": true,
+    "mortgage": false,
     "slug": "cabana-rodeada-de-vegetacion-nativa-pucon-10"
   },
   {
     "id": 11,
-    "title": "Oficina privada con dos áreas de trabajo",
+    "title": "Av. Nueva Providencia 1881, of. 1503",
     "type": "Oficina",
     "location": "Providencia, Región Metropolitana",
     "rooms": 3,
@@ -246,7 +246,7 @@
   },
   {
     "id": 12,
-    "title": "Casa costera con vista al Pacífico",
+    "title": "Av. Borgoño 21540",
     "type": "Casa",
     "location": "Concón, Región de Valparaíso",
     "rooms": 4,
@@ -268,7 +268,7 @@
   },
   {
     "id": 13,
-    "title": "Casa de adobe restaurada",
+    "title": "Av. Eastman 1920",
     "type": "Casa",
     "location": "Olmué, Región de Valparaíso",
     "rooms": 3,
@@ -290,7 +290,7 @@
   },
   {
     "id": 14,
-    "title": "Estudio luminoso con cocina integrada",
+    "title": "San Antonio 385, depto. 1806",
     "type": "Departamento",
     "location": "Santiago Centro, Región Metropolitana",
     "rooms": 1,
@@ -308,11 +308,11 @@
     "condition": "Próxima",
     "description": "Los atributos y valores de esta tarjeta se usan solo para representar el diseño del prototipo.",
     "appraisalUF": 2350,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 15,
-    "title": "Edificio de departamentos con balcones",
+    "title": "Av. Los Leones 1240, depto. 61",
     "type": "Departamento",
     "location": "Providencia, Región Metropolitana",
     "rooms": 2,
@@ -330,11 +330,11 @@
     "condition": "Próxima",
     "description": "La ficha real mostrará el alcance de la revisión legal, las bases y los documentos disponibles.",
     "appraisalUF": 5500,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 16,
-    "title": "Casa de líneas simples y jardín nativo",
+    "title": "Camino La Dehesa 1590",
     "type": "Casa",
     "location": "Lo Barnechea, Región Metropolitana",
     "rooms": 4,
@@ -356,7 +356,7 @@
   },
   {
     "id": 17,
-    "title": "Terraza con vistas a la cordillera",
+    "title": "Av. Santa Rosa 1170, depto. 304",
     "type": "Departamento",
     "location": "Santiago, Región Metropolitana",
     "rooms": 2,
@@ -378,7 +378,7 @@
   },
   {
     "id": 18,
-    "title": "Recepción moderna de coworking",
+    "title": "Av. El Bosque Norte 0177, of. 401",
     "type": "Oficina",
     "location": "Las Condes, Región Metropolitana",
     "rooms": 5,
@@ -400,7 +400,7 @@
   },
   {
     "id": 19,
-    "title": "Casa de patio y cocina renovada",
+    "title": "Av. Vicuña Mackenna 7255",
     "type": "Casa",
     "location": "La Florida, Región Metropolitana",
     "rooms": 3,
@@ -422,7 +422,7 @@
   },
   {
     "id": 20,
-    "title": "Casa urbana con jardín y terraza",
+    "title": "Av. Macul 3410",
     "type": "Casa",
     "location": "Macul, Región Metropolitana",
     "rooms": 3,
@@ -440,6 +440,6 @@
     "condition": "Próxima",
     "description": "En esta ficha demostrativa puedes revisar estructura y navegación. No hay inmueble real asociado a este contenido.",
     "appraisalUF": 5950,
-    "mortgage": true
+    "mortgage": false
   }
 ]

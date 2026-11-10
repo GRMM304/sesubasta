@@ -2,7 +2,7 @@
 const D=require('./dominio.cjs');
 const T=require('./terminologia.cjs');
 const {resetDemo}=require('./demo.cjs');
-const DEMO_RESET=1;
+const DEMO_RESET=2;
 const SOCIAL={instagram:'https://www.instagram.com/sesubasta.cl',facebook:'https://www.facebook.com/sesubasta.cl'};
 function migrate(d){
  // Cada ficha publicada conserva la versión pública aprobada separada de las ediciones privadas posteriores.
@@ -17,8 +17,6 @@ function migrate(d){
  if(d.config.homeLead==='Explora propiedades, revisa sus antecedentes y oferta en vivo hasta el cierre. Sin inscripción por propiedad.')d.config.homeLead='Explora propiedades, revisa sus antecedentes y oferta hasta el cierre. Sin inscripción por propiedad.';
  // Dominio sesubasta.cl autenticado en Brevo (oct. 2026): los correos salen desde contacto@sesubasta.cl.
  if(d.config.mailFromVersion!==2){if(!d.config.mailFrom||/oficina@grupomm\.cl/i.test(d.config.mailFrom))d.config.mailFrom='SeSubasta <contacto@sesubasta.cl>';d.config.mailFromVersion=2}
- // Datos de muestra (nov. 2026): no todas las propiedades admiten crédito hipotecario.
- if(!d.config.mortgageDemo){for(const p of d.properties)if(p.demo&&[3,6,11,13,17,18].includes(p.id)){p.mortgage=false;if(p.live)p.live.mortgage=false}d.config.mortgageDemo=1}
  d.whatsapp=d.whatsapp||[];d.tasks=d.tasks||[];
  // Garantía de seriedad por remate (oct. 2026). Los datos de la cuenta de destino los completa el Administrador general.
  d.guarantees=d.guarantees||[];if(!d.config.guaranteeBank)d.config.guaranteeBank={holder:'',rut:'',bank:'',accountType:'',number:'',email:'',refundDays:3};
@@ -35,7 +33,8 @@ function migrate(d){
   c.homeLead=T.apply(c.homeLead);
   for(const p of d.posts||[])for(const k of ['title','excerpt','body','metaDescription','seoTitle'])p[k]=T.apply(p[k]);
   c.copyVersion=1}
- // Tarjetas con tasación y crédito hipotecario (27 oct. 2026): las subastas de prueba vuelven a estar en vivo una vez.
+ // Reinicio de las subastas de prueba: 1 (27 oct. 2026) tarjetas con tasación; 2 (nov. 2026) subastas de a una,
+ // horas exactas, títulos con la dirección y crédito hipotecario solo en algunas.
  // Para repetirlo, sube DEMO_RESET y publica.
  if((d.config.demoResetVersion||0)<DEMO_RESET){resetDemo(d);d.config.demoResetVersion=DEMO_RESET}
  // Prueba del flujo de garantía pedida por Dirección (27 oct. 2026): "Casa urbana con jardín y terraza" (SS-0020) exige $5.000.

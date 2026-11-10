@@ -3,6 +3,7 @@ const fs=require('node:fs'),path=require('node:path');
 const root=__dirname,src=p=>fs.readFileSync(path.join(root,p),'utf8');
 const {seedData,COMMUNES}=require('./servidor/semilla.cjs');
 const D=require('./servidor/dominio.cjs');
+const {REGIONES}=require('./servidor/comunas.cjs');
 
 /* File-only preview data: the same seed the server uses, projected to public fields only. */
 const data=seedData({saveFile(){}});
@@ -16,7 +17,7 @@ const seed={builtAt:data.createdAt,properties,posts,categories:data.categories.m
 
 const css=src('fuentes/estilos.css');
 const app=[
- `window.__SEED=${JSON.stringify(seed)};window.__COMMUNES=${JSON.stringify(COMMUNES)};`,
+ `window.__SEED=${JSON.stringify(seed)};window.__COMMUNES=${JSON.stringify(COMMUNES)};window.__CHILE=${JSON.stringify(REGIONES)};`,
  src('fuentes/auction-core.js'),src('fuentes/catalogo-core.js'),
  ...['nucleo','marco','subasta','publico','cuenta','gestion','equipo','garantias','arranque'].map(n=>`/* ---- ${n}.js ---- */\n`+src(`fuentes/app/${n}.js`))
 ].join('\n').replace(/<\/script/gi,'<\\/script');
