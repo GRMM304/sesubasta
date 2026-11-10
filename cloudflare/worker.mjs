@@ -48,6 +48,8 @@ export class SeSubastaApp extends DurableObject{
 
 export default{
  async fetch(request,env,ctx){const url=new URL(request.url);
+  // Todo el dominio solo por HTTPS: la clave de acceso nunca viaja sin cifrar.
+  if(url.protocol==='http:'&&/(^|\.)sesubasta\.cl$/.test(url.hostname)){url.protocol='https:';return Response.redirect(url.toString(),301)}
   const locked=await gate(request,env.SITE_PASSWORD,{ip:ip(request)});if(locked)return locked;
   if(url.pathname.startsWith('/assets/')||url.pathname==='/vista-responsive.html'){const r=await env.ASSETS.fetch(request);return noindex(r,env.SITE_PASSWORD)}
   // Cambiar DATA_VERSION y volver a publicar reinicia los datos de prueba (crea un almacenamiento nuevo).

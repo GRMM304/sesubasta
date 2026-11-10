@@ -57,7 +57,7 @@ async function gate(request,password,{ip='local'}={}){if(!password)return null;c
  if(url.pathname==='/api/v1/medicion'&&request.method==='GET')return null;
  if(url.pathname.startsWith('/assets/marca/')||url.pathname.startsWith('/assets/fonts/')||url.pathname===PHOTO)return null;
  if(url.pathname==='/__acceso'&&request.method==='POST'){const list=(tries.get(ip)||[]).filter(t=>Date.now()-t<600000);if(list.length>=10)return respond(429,page('Demasiados intentos. Espera unos minutos.'),{'Content-Type':'text/html; charset=utf-8'});
-  const form=new URLSearchParams(await request.text());const next=(form.get('next')||'/').startsWith('/')?form.get('next'):'/';
+  const form=new URLSearchParams(await request.text());const asked=form.get('next')||'/';const next=/^\/(?![\/\\])/.test(asked)?asked:'/';
   if(safeEq(token(form.get('password')||''),expected)){tries.delete(ip);const secure=url.protocol==='https:'?'; Secure':'';return respond(303,null,{Location:next||'/','Set-Cookie':`${COOKIE}=${expected}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30*86400}${secure}`})}
   list.push(Date.now());tries.set(ip,list);return respond(401,page('La contraseña no es correcta.',next),{'Content-Type':'text/html; charset=utf-8','X-Robots-Tag':'noindex, nofollow'})}
  const got=cookieOf(request);if(got&&safeEq(got,expected))return null;
