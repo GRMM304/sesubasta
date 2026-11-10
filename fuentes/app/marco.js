@@ -45,7 +45,7 @@ function chrome(r,path){const area=r.area||'public';document.body.dataset.area=a
   <p class="footer-legal">© ${new Date().getFullYear()} SeSubasta.cl · Prototipo con propiedades, imágenes y valores ilustrativos. Sin pagos ni efectos jurídicos.</p>`)}
 actions.menu=el=>{const open=el.getAttribute('aria-expanded')==='true';$('#mobileMenu')?.remove();el.setAttribute('aria-expanded',String(!open));if(open)return;const path=currentUrl().pathname;const m=document.createElement('nav');m.id='mobileMenu';m.className='mobile-menu';m.setAttribute('aria-label','Menú');
  const link=([p,l])=>h`<a href="${href(p)}" ${isActive(path,p)?raw('aria-current="page"'):''}>${l}</a>`;
- m.innerHTML=toHtml(h`${PUBLIC_LINKS.map(([p,l])=>Array.isArray(l)?h`<div class="menu-group"><span>${p}</span>${l.map(link)}</div>`:link([p,l]))}${state.user?'':h`<a href="${href('/ingresar')}">Ingresar</a>`}`);
+ m.innerHTML=toHtml(h`${PUBLIC_LINKS.map(([p,l])=>Array.isArray(l)?h`<div class="menu-group"><span>${p}</span>${l.map(link)}</div>`:link([p,l]))}`);
  $('#topbar').after(m);m.style.top=$('#topbar').getBoundingClientRect().bottom+'px';m.querySelector('a').focus();
  const close=()=>{m.remove();el.setAttribute('aria-expanded','false');document.removeEventListener('click',outside)};
  const outside=e=>{if(!m.contains(e.target)&&!el.contains(e.target))close()};setTimeout(()=>document.addEventListener('click',outside));
