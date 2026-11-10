@@ -150,3 +150,7 @@ function addExtraBlog(d,slugify,now=Date.now()){d.categories=d.categories||[];d.
   d.posts.push({id:'post_'+slug.slice(0,40),slug,title:p.title,excerpt:p.excerpt,body:p.body,cover:{key:`demo:${p.image}`,alt:'Fotografía ilustrativa de una propiedad'},categoryId:cat?cat.id:null,tags:[],authorId:'usr_editor',status:'published',seoTitle:'',metaDescription:p.excerpt,canonical:'',noindex:false,publishedAt:at,scheduledAt:null,createdAt:at,updatedAt:at,revisions:[],featured:!!p.featured});added++}
  return added}
 module.exports.addExtraBlog=addExtraBlog;
+/* Textos completos: reemplaza el cuerpo de los artículos de muestra que nadie editó desde Gestión (sin revisiones). */
+function applyLongBodies(d,slugify){const {LONG,EXCERPTS}=require('./blog-textos.cjs');const bySlug=Object.fromEntries(Object.entries(LONG).map(([t,b])=>[slugify(t),b]));let n=0;
+ for(const p of d.posts||[]){if((p.revisions||[]).length)continue;const b=LONG[p.title]||bySlug[p.slug]||bySlug[slugify(p.title)];if(b&&p.body!==b){p.body=b;n++}if(EXCERPTS[p.excerpt]){p.excerpt=EXCERPTS[p.excerpt];p.metaDescription=p.excerpt}}return n}
+module.exports.applyLongBodies=applyLongBodies;

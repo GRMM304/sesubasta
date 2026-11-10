@@ -2,7 +2,7 @@
 const D=require('./dominio.cjs');
 const T=require('./terminologia.cjs');
 const {resetDemo}=require('./demo.cjs');
-const {addExtraBlog}=require('./blog-extra.cjs');
+const {addExtraBlog,applyLongBodies}=require('./blog-extra.cjs');
 const DEMO_RESET=2;
 const SOCIAL={instagram:'https://www.instagram.com/sesubasta.cl',facebook:'https://www.facebook.com/sesubasta.cl'};
 function migrate(d){
@@ -42,6 +42,8 @@ function migrate(d){
  if(!d.config.guarantee20){const p=d.properties.find(x=>x.id===20&&x.demo);if(p){p.conditions={...p.conditions,guaranteeCLP:5000};if(p.live)p.live.conditions={...p.live.conditions,guaranteeCLP:5000};D.audit(d,'system','property.update','property',p.id,{guaranteeCLP:5000,reason:'Prueba del flujo de garantía'})}d.config.guarantee20=true}
  // Blog (nov. 2026): 10 artículos generales sobre subastas y 2 categorías nuevas. Solo agrega los que falten.
  if((d.config.blogExtraVersion||0)<1){addExtraBlog(d,require('./semilla.cjs').slugify);d.config.blogExtraVersion=1}
+ // 2: textos completos con subtítulos cortos para el índice lateral (solo artículos sin ediciones del equipo).
+ if((d.config.blogExtraVersion||0)<2){applyLongBodies(d,require('./semilla.cjs').slugify);d.config.blogExtraVersion=2}
  for(const m of d.mail){delete m.html;delete m.text}
 }
 module.exports={migrate,SOCIAL};
