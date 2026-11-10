@@ -17,6 +17,8 @@ function migrate(d){
  if(d.config.homeLead==='Explora propiedades, revisa sus antecedentes y oferta en vivo hasta el cierre. Sin inscripción por propiedad.')d.config.homeLead='Explora propiedades, revisa sus antecedentes y oferta hasta el cierre. Sin inscripción por propiedad.';
  // Dominio sesubasta.cl autenticado en Brevo (oct. 2026): los correos salen desde contacto@sesubasta.cl.
  if(d.config.mailFromVersion!==2){if(!d.config.mailFrom||/oficina@grupomm\.cl/i.test(d.config.mailFrom))d.config.mailFrom='SeSubasta <contacto@sesubasta.cl>';d.config.mailFromVersion=2}
+ // Datos de muestra (nov. 2026): no todas las propiedades admiten crédito hipotecario.
+ if(!d.config.mortgageDemo){for(const p of d.properties)if(p.demo&&[3,6,11,13,17,18].includes(p.id)){p.mortgage=false;if(p.live)p.live.mortgage=false}d.config.mortgageDemo=1}
  d.whatsapp=d.whatsapp||[];d.tasks=d.tasks||[];
  // Garantía de seriedad por remate (oct. 2026). Los datos de la cuenta de destino los completa el Administrador general.
  d.guarantees=d.guarantees||[];if(!d.config.guaranteeBank)d.config.guaranteeBank={holder:'',rut:'',bank:'',accountType:'',number:'',email:'',refundDays:3};

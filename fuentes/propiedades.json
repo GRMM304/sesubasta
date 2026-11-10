@@ -64,7 +64,7 @@
     "condition": "Próxima",
     "description": "Ejemplo de inmueble comercial. La ficha real debe identificar el origen de cada dato y mostrar solo información validada y autorizada.",
     "appraisalUF": 4200,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 4,
@@ -130,7 +130,7 @@
     "condition": "En vivo",
     "description": "Información de ejemplo para revisar el comportamiento del catálogo y de la ficha. Las imágenes son ilustrativas y no identifican un inmueble publicado.",
     "appraisalUF": 5250,
-    "mortgage": true,
+    "mortgage": false,
     "slug": "local-comercial-con-fachada-acristalada-las-condes-6"
   },
   {
@@ -242,7 +242,7 @@
     "condition": "Próxima",
     "description": "Ejemplo de ficha de oficina con distribución, superficies y datos de uso. No representa una oportunidad real.",
     "appraisalUF": 4150,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 12,
@@ -286,7 +286,7 @@
     "condition": "Próxima",
     "description": "Imagen ilustrativa. No constituye una publicación ni certifica características de una propiedad real.",
     "appraisalUF": 7300,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 14,
@@ -374,7 +374,7 @@
     "condition": "Próxima",
     "description": "Muestra de ficha; no hay disponibilidad de visita real asociada a esta imagen.",
     "appraisalUF": 5250,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 18,
@@ -396,7 +396,7 @@
     "condition": "Próxima",
     "description": "La persona puede consultar la ficha completa, sin iniciar sesión. Las acciones de participación requieren una cuenta habilitada.",
     "appraisalUF": 8300,
-    "mortgage": true
+    "mortgage": false
   },
   {
     "id": 19,

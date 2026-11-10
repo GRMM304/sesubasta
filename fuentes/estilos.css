@@ -232,19 +232,26 @@ body[data-area=staff] .demo-banner{background:#2a1c6b;color:#E8E4F7;border-color
 .participants{color:var(--muted);font-size:13px;margin:0}
 .card-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:14px}
 .card-actions .btn-primary{grid-column:1/-1}
-.card-facts{list-style:none;margin:10px 0 0;padding:0 0 12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;border-bottom:1px solid var(--line);color:var(--navy);font-size:14px;font-weight:600}
-.card-facts li{display:flex;align-items:center;gap:7px;min-width:0}.card-facts li>span:first-of-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.card-facts .ico{flex:none;width:20px;height:20px;color:var(--violet)}
+.card-facts{list-style:none;margin:10px 0 0;padding:0 0 12px;display:flex;flex-wrap:nowrap;gap:14px;border-bottom:1px solid var(--line);color:var(--navy);font-size:14px;font-weight:600}
+.card-facts li{display:flex;align-items:center;gap:5px;min-width:0;flex:none}.card-facts li:first-child{flex:0 1 auto}.card-facts li>span:first-of-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-facts .ico{flex:none;width:18px;height:18px;color:var(--violet)}
 .mortgage-flag{display:flex;align-items:center;gap:8px;margin:10px 0 0;padding:8px 12px;border-radius:10px;background:var(--cloud);color:var(--muted);font-size:14px;font-weight:600}
 .mortgage-flag .ico{width:20px;height:20px}.mortgage-flag.yes{background:#F0EEFA;color:var(--navy)}.mortgage-flag.yes .ico{color:var(--violet)}
-.card-state{margin:12px 0 0;display:grid;gap:10px}
+.card-state{margin:12px 0 0;display:grid;gap:10px;border-radius:14px;padding:12px 14px;border:1.5px solid var(--line)}
+.card-state[data-kind=open]{background:#F0EEFA;border-color:#D9D0F7}
+.card-state[data-kind=scheduled]{background:#fff}
+.card-state[data-kind=closed]{background:var(--cloud)}
+.card-state-title{display:flex;align-items:center;gap:6px;margin:0;font-family:var(--font-title);font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--violet)}
+.card-state-title .ico{width:18px;height:18px}
+.card-state[data-kind=closed] .card-state-title{color:var(--slate)}
 .card-state dl{margin:0;display:grid;gap:6px}
-dl.card-state{grid-template-columns:1fr auto;align-items:end}
-.card-state div{margin:0}.card-state dt{color:var(--muted);font-size:14px}.card-state dd{margin:0;font-weight:700;color:var(--navy)}
-.card-state dl div{display:flex;justify-content:space-between;gap:10px;font-size:14px}
-.card-state h4{margin:0;font-size:15px;color:var(--navy)}
+.card-state dl div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px}
+.card-state dt{color:var(--muted)}.card-state dd{margin:0;font-weight:700;color:var(--navy);text-align:right}
+.card-state .state-amount{font-family:var(--font-title);font-size:22px;font-weight:800}
+.card-state .countdown{color:var(--violet);font-family:var(--font-title);font-variant-numeric:tabular-nums}
+.card-state h4{margin:0;font-size:14px;color:var(--navy)}
 .top-bids{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:top}
-.top-bids li{counter-increment:top;display:flex;align-items:center;gap:10px;background:var(--cloud);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--muted)}
+.top-bids li{counter-increment:top;display:flex;align-items:center;gap:10px;background:#fff;border-radius:10px;padding:8px 10px;font-size:13px;color:var(--muted)}
 .top-bids li:before{content:counter(top);display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:7px;background:var(--navy);color:var(--lime);font-family:var(--font-title);font-weight:800;font-size:12px}
 .top-bids strong{color:var(--navy);font-size:16px;margin-right:auto}
 .property-card .card-actions .btn{min-height:50px;font-size:15px;padding:0 10px;white-space:nowrap}
