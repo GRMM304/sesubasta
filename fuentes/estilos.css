@@ -614,7 +614,7 @@ a.staff-who{color:#fff;text-decoration:none}
 .home-search .form-field{margin:0}
 .home-search .btn-primary,.hero .home-search .btn-primary:hover{background:var(--navy);color:#fff;width:100%;justify-content:center;min-height:52px}
 .home-search .text-link{justify-self:center;font-weight:700}
-@media(min-width:560px){.home-search-fields{grid-template-columns:1fr 1fr}.home-search-fields label:last-child{grid-column:1/-1}}
+@media(min-width:560px){.home-search-fields{grid-template-columns:1fr 1fr}}
 @media(min-width:1200px){.home-search{padding:28px 32px}}
 
 /* Foto de la tarjeta: sombreado oscuro desde abajo para que el descuento y la cuenta regresiva se lean sobre cualquier imagen. */
@@ -777,19 +777,59 @@ a.staff-who{color:#fff;text-decoration:none}
 @media (min-width:1024px){.article-cover{display:block;width:calc(100% - 2*var(--gutter));max-width:calc(1100px - 2*var(--gutter));border-radius:22px}}
 @media (min-width:1024px){.article-layout{grid-template-columns:240px minmax(0,1fr);gap:56px}}
 
-/* ---------- cómo funciona: paso a paso del comprador ---------- */
-.buyer-steps{list-style:none;margin:0 0 34px;padding:0;display:grid;gap:0;max-width:880px}
-.buyer-steps>li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px}
-.bs-marker{position:relative;display:flex;justify-content:center}
-.bs-marker:after{content:"";position:absolute;top:48px;bottom:-4px;width:2px;background:var(--line)}
-.buyer-steps>li:last-child .bs-marker:after{display:none}
-.bs-n{position:relative;z-index:1;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--lime);color:var(--navy);font-family:var(--font-title);font-weight:800;font-size:18px}
-.bs-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:16px;position:relative}
-.bs-ico{position:absolute;top:18px;right:18px;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#F0EEFA;color:var(--violet)}.bs-ico .ico{width:22px;height:22px}
-.bs-card h2{font-size:21px;margin:4px 56px 8px 0}
-.bs-card>p{color:var(--muted);margin:0 0 12px}
-.bs-card ul{list-style:none;margin:0;padding:12px 14px;display:grid;gap:8px;background:var(--cloud);border-radius:14px}
-.bs-card ul li{display:flex;gap:8px;align-items:flex-start;font-size:14.5px;color:var(--navy)}
-.bs-card ul .ico{flex:none;width:18px;height:18px;color:var(--violet);margin-top:2px}
 .cta-banner.compact{min-height:280px}
-@media (min-width:768px){.buyer-steps>li{grid-template-columns:56px minmax(0,1fr);gap:22px}.bs-n{width:56px;height:56px;font-size:22px}.bs-marker:after{top:60px}.bs-card{padding:24px 28px}}
+
+/* ---------- tarjeta próxima: día de inicio destacado ---------- */
+.card-start{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px 12px;border-radius:14px;background:var(--violet);color:#fff}
+.start-cal{flex:none;display:grid;justify-items:center;width:54px;border-radius:10px;overflow:hidden;background:#fff;color:var(--navy);line-height:1}
+.start-cal span{display:block;width:100%;text-align:center;background:var(--lime);font-family:var(--font-title);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:4px 0}
+.start-cal strong{font-family:var(--font-title);font-weight:800;font-size:24px;padding:5px 0 6px}
+.start-info{min-width:0;display:grid}
+.start-info small{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--lime)}
+.start-info strong{font-family:var(--font-title);font-size:16px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.start-info strong:first-letter{text-transform:uppercase}
+.start-info span{font-size:12.5px;color:#E3DFF4}
+.card-stats .wide{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.card-stats[data-kind=scheduled]{grid-template-columns:1fr}
+/* ---------- tarjeta cerrada: de fondo y apagada, con el resumen encima ---------- */
+.property-card.is-closed{position:relative;background:#F4F3F8}
+.closed-bg{display:flex;flex-direction:column;flex:1;opacity:.45;filter:grayscale(1);pointer-events:none;user-select:none}
+.closed-panel{position:absolute;left:12px;right:12px;bottom:12px;z-index:2;background:#fff;border-radius:16px;padding:12px 12px 12px;box-shadow:0 12px 30px #0e013d2e;border:1px solid var(--line)}
+.closed-head{display:flex;align-items:center;gap:8px;margin:0 0 2px;color:var(--navy);font-family:var(--font-title);font-size:15px}
+.closed-head .ico{width:18px;height:18px;color:var(--violet)}
+.closed-panel .top-bids{margin-top:8px}
+.closed-panel .card-stats{margin-top:8px}
+
+/* ---------- cómo funciona: diagrama de pasos alternados ---------- */
+.how-hero{max-width:var(--wrap);margin:0 auto;padding:22px var(--gutter) 6px;text-align:center}
+.how-hero .breadcrumbs{justify-content:center}
+.how-hero h1{font-size:32px;line-height:1.1;margin:14px auto 10px;max-width:760px}
+.how-hero p{color:var(--muted);max-width:620px;margin:0 auto}
+.how-flow{list-style:none;margin:0 0 40px;padding:0;display:grid;gap:44px}
+.how-step{display:grid;gap:22px;align-items:center}
+.step-art{position:relative;width:min(300px,78vw);aspect-ratio:1;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#7B3BFF,#4A10D8)}
+.step-art[data-tone="1"]{background:linear-gradient(145deg,#2A1670,var(--navy))}
+.step-art[data-tone="2"]{background:linear-gradient(145deg,#DFFF7A,#B5F01C)}
+.art-screen{width:58%;aspect-ratio:1/.8;background:#fff;border-radius:18px;box-shadow:0 18px 40px #0e013d40;display:grid;align-content:center;justify-items:center;gap:8px;padding:14px;transform:rotate(-4deg)}
+.art-ico{display:grid;place-items:center;width:46%;aspect-ratio:1;border-radius:50%;background:#F0EEFA;color:var(--violet)}.art-ico .ico{width:56%;height:56%}
+.art-bar{display:block;width:70%;height:8px;border-radius:99px;background:#E7E4F2}.art-bar.short{width:46%}
+.art-btn{display:block;width:52%;height:14px;border-radius:99px;background:var(--lime);margin-top:2px}
+.step-art[data-tone="2"] .art-btn{background:var(--violet)}
+.art-badge{position:absolute;right:12%;top:12%;display:grid;place-items:center;width:22%;aspect-ratio:1;border-radius:50%;background:var(--lime);color:var(--navy);box-shadow:0 10px 24px #0e013d40}
+.step-art[data-tone="2"] .art-badge{background:var(--navy);color:var(--lime)}
+.art-badge .ico{width:50%;height:50%}
+.step-text h2{display:flex;align-items:baseline;gap:12px;font-size:26px;line-height:1.15;margin:0 0 10px}
+.step-num{font-family:var(--font-title);font-weight:800;font-size:44px;line-height:.9;color:var(--violet)}
+.step-text>p{color:var(--muted);font-size:16.5px;margin:0 0 14px}
+.step-text ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.step-text ul li{display:flex;gap:8px;align-items:flex-start;color:var(--navy)}
+.step-text ul .ico{flex:none;width:18px;height:18px;color:var(--violet);margin-top:3px}
+.step-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+@media (min-width:768px){
+ .how-hero{padding-top:34px}.how-hero h1{font-size:42px}
+ .how-flow{gap:56px}
+ .how-step{grid-template-columns:1fr 1fr;gap:48px}
+ .how-step:nth-child(even) .step-art{order:2}
+ .step-art{width:min(340px,100%)}
+}
+.closed-bg .property-body{padding-bottom:210px}

@@ -24,8 +24,10 @@ function query(rows,q={},uf={available:false}){
  const min=num(q.min)!=null?toUF(num(q.min)):null,max=num(q.max)!=null?toUF(num(q.max)):null;
  if(min!=null)out=out.filter(p=>amount(p)>=min);if(max!=null)out=out.filter(p=>amount(p)<=max);
  if(q.status)out=out.filter(p=>String(q.status).split(',').includes(statusOf(p)));
- const sorts={relevance:(a,b)=>RANK[statusOf(a)]-RANK[statusOf(b)]||(a.auction?.end||0)-(b.auction?.end||0),recent:(a,b)=>(b.publishedAt||0)-(a.publishedAt||0),price_asc:(a,b)=>amount(a)-amount(b),price_desc:(a,b)=>amount(b)-amount(a),closing:(a,b)=>(a.auction?.end||9e15)-(b.auction?.end||9e15)};
- out.sort(sorts[q.sort]||sorts.relevance);
+ const done=p=>['closed','cancelled'].includes(statusOf(p))?1:0;
+ const sorts={relevance:(a,b)=>RANK[statusOf(a)]-RANK[statusOf(b)]||(a.auction?.end||0)-(b.auction?.end||0),recent:(a,b)=>(b.publishedAt||0)-(a.publishedAt||0),price_asc:(a,b)=>amount(a)-amount(b),price_desc:(a,b)=>amount(b)-amount(a),closing:(a,b)=>done(a)-done(b)||(a.auction?.end||9e15)-(b.auction?.end||9e15),start:(a,b)=>done(a)-done(b)||(a.auction?.start||9e15)-(b.auction?.start||9e15)};
+ // Por defecto: cierre más próximo, con las cerradas y canceladas al final.
+ out.sort(sorts[q.sort]||sorts.closing);
  const limit=Math.min(Math.max(num(q.limit)||12,1),60),offset=Math.max(parseInt(b64d(String(q.cursor||'')),10)||0,0);
  return {items:out.slice(offset,offset+limit),total:out.length,nextCursor:offset+limit<out.length?b64e(String(offset+limit)):null,priceFilterUnavailable:q.unit==='CLP'&&!uf.available&&(num(q.min)!=null||num(q.max)!=null)}}
 function facets(rows){const uniq=k=>[...new Set(rows.map(p=>p[k]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));const communes={};for(const p of rows){(communes[p.region]=communes[p.region]||[]);if(!communes[p.region].includes(p.commune))communes[p.region].push(p.commune)}Object.values(communes).forEach(l=>l.sort((a,b)=>a.localeCompare(b,'es')));return {regions:uniq('region'),communes,types:uniq('type'),occupancy:uniq('occupancy')}}

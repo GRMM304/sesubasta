@@ -4,6 +4,16 @@ const T=require('./terminologia.cjs');
 const {resetDemo}=require('./demo.cjs');
 const {addExtraBlog,applyLongBodies}=require('./blog-extra.cjs');
 const DEMO_RESET=3;
+/* Preguntas frecuentes anteriores a nov. 2026 (decían que no hay inscripción por propiedad). */
+const OLD_FAQS=[
+ ['¿Necesito inscribirme en cada remate?','No. Con una cuenta de comprador activa y tu correo verificado puedes ofertar en cualquier propiedad abierta.'],
+ ['¿Cómo se define el siguiente mínimo?','Antes de la primera oferta es el precio inicial. Después de cada oferta aceptada es la oferta vigente más el incremento configurado para esa subasta.'],
+ ['¿Puedo ofertar varias veces?','Sí. Puedes registrar nuevas ofertas válidas durante toda la ventana abierta, incluso para superar tu propia oferta.'],
+ ['¿Qué pasa al llegar la hora de cierre?','El cierre es fijo. Cualquier intento evaluado a esa hora o después se rechaza. No hay extensión automática.'],
+ ['¿Tener la mejor oferta significa que gané?','No necesariamente. Al cierre se informa un resultado preliminar; la adjudicación requiere confirmación según las bases.'],
+ ['¿Por qué veo los valores en UF y en pesos?','La unidad contractual de cada subasta es la UF. El selector CLP muestra una equivalencia referencial con la tasa y fecha indicadas.'],
+ ['¿Quién ve mis ofertas?','Solo tú y el equipo autorizado. El público ve solo la oferta vigente y la cantidad de personas, nunca tu identidad.']
+];
 const SOCIAL={instagram:'https://www.instagram.com/sesubasta.cl',facebook:'https://www.facebook.com/sesubasta.cl'};
 function migrate(d){
  // Cada ficha publicada conserva la versión pública aprobada separada de las ediciones privadas posteriores.
@@ -45,6 +55,13 @@ function migrate(d){
  if((d.config.blogExtraVersion||0)<1){addExtraBlog(d,require('./semilla.cjs').slugify);d.config.blogExtraVersion=1}
  // 2: textos completos con subtítulos cortos para el índice lateral (solo artículos sin ediciones del equipo).
  if((d.config.blogExtraVersion||0)<2){applyLongBodies(d,require('./semilla.cjs').slugify);d.config.blogExtraVersion=2}
+ // Textos sin "remates" ni "subastas" y con la garantía por propiedad (nov. 2026). Solo cambia lo que nadie editó desde Gestión.
+ if((d.config.copyVersion||0)<2){const c=d.config;const S=require('./semilla.cjs');const T2=require('./terminologia.cjs');
+  const same=(c.faqs||[]).length===OLD_FAQS.length&&c.faqs.every((f,i)=>f.q===T2.apply(OLD_FAQS[i][0])&&f.a===T2.apply(OLD_FAQS[i][1]));
+  if(same)c.faqs=S.FAQS.map(([q,a])=>({q,a}));
+  if(c.homeLead==='Explora propiedades, revisa sus antecedentes y oferta hasta el cierre. Sin inscripción por propiedad.')c.homeLead='Propiedades entre un 30 % y un 35 % bajo el valor de tasación. Revisa sus antecedentes y oferta hasta el cierre.';
+  if(c.how&&c.how.purpose===T2.apply('Remates Dinámicos ordena la información de cada propiedad y registra cada oferta con hora oficial del servidor para que la competencia sea transparente.'))c.how.purpose='SeSubasta ordena la información de cada propiedad y registra cada oferta con hora oficial del servidor para que la competencia sea transparente.';
+  c.copyVersion=2}
  for(const m of d.mail){delete m.html;delete m.text}
 }
 module.exports={migrate,SOCIAL};
