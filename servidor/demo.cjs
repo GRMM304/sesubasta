@@ -8,7 +8,7 @@ const HOUR=3600000,DAY=24*HOUR;
 /* Subastas de muestra de a una (nov. 2026), con inicio y cierre en horas exactas: 3 cerradas con ofertas,
    1 abierta, 1 suspendida y el resto próximas en días seguidos. */
 const OPEN=2,CLOSED=[19,13,17],PAUSED=20,PAUSE_REASON='Revisión de un antecedente informado. Se comunicará la nueva fecha.';
-function demoPlan(rows,now=Date.now(),liveMinutes=0){const base=Math.floor(now/HOUR)*HOUR;const openEnd=base+Math.max(1,Math.round((liveMinutes||120)/60))*HOUR;const plan={};
+function demoPlan(rows,now=Date.now(),liveMinutes=0){const base=Math.floor(now/HOUR)*HOUR;const openEnd=base+Math.max(1,Math.round((liveMinutes||1440)/60))*HOUR;const plan={};
  const min=id=>Math.round(rows.find(r=>r.id===id).minUF*100);
  plan[OPEN]={start:base-HOUR,end:openEnd,bids:[]};
  CLOSED.forEach((id,k)=>{const end=base-HOUR-k*DAY,start=end-DAY,m=min(id);plan[id]={start,end,bids:[['camila',m,start+2*HOUR],['alex',m+5000,start+6*HOUR],['camila',m+15000,start+11*HOUR]]}});

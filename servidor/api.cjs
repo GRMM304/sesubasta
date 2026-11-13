@@ -413,7 +413,19 @@ function createApi({store,engine,limiter,broadcast,viewers,local=true,realtime='
    try{status=(await Mail.deliver({...m,...D.renderMail(m),templateId:db().config.brevoTemplates?.[m.template]?.id||null})).status}catch(err){status='queued';error=err.message}store.tx(d=>{const x=d.mail.find(v=>v.id===m.id);if(x){x.status=status;x.tries++;x.error=error;if(x.tries>=3&&status==='queued')x.status='failed';x.deliveredAt=status==='sent'||status==='local'?Date.now():null}})}}finally{delivering=false}}
 
  /* ---------- periodic work: close results and scheduled posts ---------- */
- function tick(){const alerted=timedAlerts();taskReminders();deliverOutbox().catch(e=>console.error('correo',e));deliverWhatsapp().catch(e=>console.error('whatsapp',e));const d=db();const now=Date.now();const pending=[];for(const aid of Object.keys(engine.state.auctions)){const a=engine.state.auctions[aid];if(engine.status(a)==='closed'&&!d.awards[aid])pending.push(aid)}
+ /* Muestra (nov. 2026): siempre debe haber una oportunidad abierta. Si ninguna lo está, se abre ahora la próxima
+    propiedad de muestra sin ofertas (o, si no quedan próximas, una cerrada sin ofertas). Las propiedades reales no se tocan. */
+ function keepDemoOpen(){const d=db();const now=Date.now();const H=3600000;
+  if(Object.values(engine.state.auctions).some(a=>engine.status(a)==='open'))return false;
+  const demo=d.properties.filter(p=>p.demo&&p.auctionId&&p.publicStatus==='published'&&engine.state.auctions[String(p.auctionId)]);
+  const pick=(st,key)=>demo.map(p=>({p,a:engine.state.auctions[String(p.auctionId)]})).filter(x=>engine.status(x.a)===st&&!x.a.bids.length).sort((x,y)=>key(x.a)-key(y.a))[0];
+  const c=pick('scheduled',a=>a.start)||pick('closed',a=>a.end);if(!c)return false;
+  const start=Math.floor(now/H)*H;const end=c.a.end>now+H?c.a.end:start+24*H;
+  engine.reschedule(c.p.auctionId,{start,end,initialMinor:c.a.initialMinor,incrementMinor:c.a.incrementMinor,termsVersion:c.a.termsVersion});
+  store.tx(x=>{const p=x.properties.find(v=>v.id===c.p.id);p.conditions={...p.conditions,opensAt:start,closesAt:end};if(p.live)p.live.conditions={...p.live.conditions,opensAt:start,closesAt:end};
+   D.audit(x,'system','auction.demo_open','auction',String(c.p.auctionId),{start,end,reason:'Siempre una oportunidad de muestra abierta'},'')});
+  return true}
+ function tick(){const opened=keepDemoOpen();const alerted=timedAlerts()||opened;taskReminders();deliverOutbox().catch(e=>console.error('correo',e));deliverWhatsapp().catch(e=>console.error('whatsapp',e));const d=db();const now=Date.now();const pending=[];for(const aid of Object.keys(engine.state.auctions)){const a=engine.state.auctions[aid];if(engine.status(a)==='closed'&&!d.awards[aid])pending.push(aid)}
   const due=d.posts.filter(p=>p.status==='scheduled'&&p.scheduledAt<=now);if(!pending.length&&!due.length)return alerted;
   store.tx(x=>{for(const aid of pending){const r=engine.ranking(aid);const p=auctionProperty(aid);x.awards[aid]={auctionId:Number(aid),status:r.best?'pending_confirmation':'no_bids',bestReceipt:r.best?.receipt||null,bestBuyer:r.best?.buyer||null,bestMinor:r.best?.amountMinor||null,runnerReceipt:r.runner?.receipt||null,runnerBuyer:r.runner?.buyer||null,runnerMinor:r.runner?.amountMinor||null,current:'best',at:now,history:[{to:r.best?'pending_confirmation':'no_bids',at:now,by:null,action:'close'}]};D.audit(x,null,'auction.closed','auction',aid,{bids:engine.get(aid).bids.length},'');G.onClose(x,aid,r);
     if(r.best)D.notifyStaff(x,['operator'],{title:`Resultado por confirmar · ${p?.title||'subasta '+aid}`,body:'La subasta cerró a la hora oficial. Revisa el resultado preliminar y confirma la adjudicación según las bases.',link:`/gestion/remates/${aid}/resultado`});
