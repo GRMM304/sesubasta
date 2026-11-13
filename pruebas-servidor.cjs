@@ -29,6 +29,7 @@ test('registro, verificación obligatoria para ofertar y separación de audienci
  const bad=await c('POST','/api/v1/auth/register',{name:'X',email:'no',password:'corta',password2:'otra'});assert.equal(bad.status,422);assert(bad.data.fields.email&&bad.data.fields.password&&bad.data.fields.acceptTerms);
  const r=await c('POST','/api/v1/auth/register',{name:'Persona Prueba',email:'Persona@Ejemplo.cl',password:'ClaveSegura123',password2:'ClaveSegura123',acceptTerms:true,roles:['general_admin']});assert.equal(r.status,200);assert.deepEqual(r.data.user.roles,['buyer']);assert.equal(r.data.user.emailVerified,false);
  assert.equal((await c('POST','/api/v1/auth/register',{name:'Otra',email:'persona@ejemplo.cl',password:'ClaveSegura123',password2:'ClaveSegura123',acceptTerms:true})).status,409);
+ engine.state.auctions['6'].start=Date.now()-1000; // las subastas de muestra son de a una: se abre la 6 para la prueba
  const s=engine.snapshot(6);const blocked=await c('POST','/api/v1/auctions/6/bids',{amountMinor:s.nextMinor,unit:'UF',termsVersion:s.termsVersion,key:'unverified_1',expectedVersion:s.version});assert.equal(blocked.status,403);assert.equal(blocked.data.code,'EMAIL_NOT_VERIFIED');
  const token=new URL(lastMail('Persona@Ejemplo.cl').link).searchParams.get('token');assert.equal((await c('POST','/api/v1/auth/verify-email',{token})).status,200);assert.equal((await c('POST','/api/v1/auth/verify-email',{token})).data.code,'TOKEN_USED');
  const ok=await c('POST','/api/v1/auctions/6/bids',{amountMinor:s.nextMinor,unit:'UF',termsVersion:s.termsVersion,key:'verified_1',expectedVersion:s.version});assert.equal(ok.status,200);
@@ -101,7 +102,7 @@ test('alertas por correo: superación, nueva propiedad, recordatorio de cierre, 
  const n=mailsTo('alex@comprador.demo.cl').length;assert.equal((await bid(alex,2,'alert_a2')).status,200);assert.equal((await bid(camila,2,'alert_c2')).status,200);
  assert.equal(mailsTo('alex@comprador.demo.cl').length,n,'sin correo tras la baja');assert(store.data.notifications.some(x=>x.userId==='alex'&&x.type==='outbid'),'la notificación en la app se mantiene');
  // Recordatorio de cierre a 10 minutos: una sola vez por subasta.
- const a=engine.state.auctions['6'];a.end=Date.now()+5*60000;store.data.saved.push({userId:'camila',propertyId:6,at:Date.now()});
+ const a=engine.state.auctions['6'];a.start=Date.now()-60000;a.end=Date.now()+5*60000;store.data.saved.push({userId:'camila',propertyId:6,at:Date.now()});
  const api=require('./servidor/api.cjs');void api;
  await new Promise(r=>setTimeout(r,1300));
  const reminders=mailsTo('camila@comprador.demo.cl').filter(m=>m.subject.startsWith('Cierra en 10 minutos'));assert.equal(reminders.length,1);
