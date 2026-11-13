@@ -19,7 +19,9 @@
     "condition": "Próxima",
     "description": "Ficha demostrativa para mostrar cómo se organiza la información de una casa. Antes de participar revisa los antecedentes, las condiciones y el estado informado de la propiedad.",
     "appraisalUF": 6450,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Irarrázaval (L3 y L5) a 6 min caminando. Ciclovía y buses en Av. Irarrázaval.",
+    "appreciation": "3,5 % anual estimada"
   },
   {
     "id": 2,
@@ -31,7 +33,7 @@
     "parking": 1,
     "area": 84,
     "plot": null,
-    "occupancy": "Por confirmar",
+    "occupancy": "Arrendada",
     "start": 1792574978309,
     "end": 1792654178309,
     "people": 12,
@@ -42,7 +44,9 @@
     "description": "Ejemplo de ficha completa: características, ocupación reportada, galería, documentos autorizados y fechas de inicio y cierre. La documentación de cada publicación debe revisarse antes de tomar una decisión.",
     "appraisalUF": 6000,
     "mortgage": true,
-    "slug": "departamento-con-terraza-y-vista-despejada-providencia-2"
+    "slug": "departamento-con-terraza-y-vista-despejada-providencia-2",
+    "connectivity": "Metro Los Leones (L1 y L6) a 5 min. Acceso rápido a Costanera Norte.",
+    "appreciation": "4,0 % anual estimada"
   },
   {
     "id": 3,
@@ -64,7 +68,9 @@
     "condition": "Próxima",
     "description": "Ejemplo de inmueble comercial. La ficha real debe identificar el origen de cada dato y mostrar solo información validada y autorizada.",
     "appraisalUF": 4200,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Universidad de Chile (L1 y L3) a 3 min. Múltiples recorridos de buses.",
+    "appreciation": "4,5 % anual estimada"
   },
   {
     "id": 4,
@@ -86,7 +92,9 @@
     "condition": "Próxima",
     "description": "Contenido de muestra. La situación de ocupación y las condiciones de visita se deben validar y explicar en la publicación real.",
     "appraisalUF": 8150,
-    "mortgage": true
+    "mortgage": true,
+    "connectivity": "Metro Plaza Egaña (L3 y L4) a 10 min. Acceso a Américo Vespucio.",
+    "appreciation": "5,0 % anual estimada"
   },
   {
     "id": 5,
@@ -98,7 +106,7 @@
     "parking": 2,
     "area": 142,
     "plot": 300,
-    "occupancy": "Por confirmar",
+    "occupancy": "Arrendada",
     "start": 1793035778309,
     "end": 1793240978309,
     "people": 0,
@@ -108,7 +116,9 @@
     "condition": "Próxima",
     "description": "En una publicación real se incorporan aquí descripción, superficies, atributos, documentos públicos, condiciones y fechas aprobadas.",
     "appraisalUF": 7850,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Grecia (L4) a 10 min. Acceso a Américo Vespucio.",
+    "appreciation": "3,0 % anual estimada"
   },
   {
     "id": 6,
@@ -131,7 +141,9 @@
     "description": "Información de ejemplo para revisar el comportamiento del catálogo y de la ficha. Las imágenes son ilustrativas y no identifican un inmueble publicado.",
     "appraisalUF": 5250,
     "mortgage": false,
-    "slug": "local-comercial-con-fachada-acristalada-las-condes-6"
+    "slug": "local-comercial-con-fachada-acristalada-las-condes-6",
+    "connectivity": "Metro Escuela Militar (L1) a 8 min. Acceso a Costanera Norte y Kennedy.",
+    "appreciation": "4,2 % anual estimada"
   },
   {
     "id": 7,
@@ -153,7 +165,9 @@
     "condition": "Próxima",
     "description": "Ficha visual de demostración; antecedentes legales y características reales deben provenir del expediente aprobado.",
     "appraisalUF": 10300,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Acceso directo a Autopista Los Libertadores y Radial Nororiente.",
+    "appreciation": "5,5 % anual estimada"
   },
   {
     "id": 8,
@@ -175,7 +189,9 @@
     "condition": "Próxima",
     "description": "La ficha de propiedad incluye todos los datos públicos desde el inicio y mantiene los documentos privados bajo control de acceso.",
     "appraisalUF": 3700,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Buena conectividad con transporte público y vías principales de la comuna.",
+    "appreciation": "3,5 % anual estimada"
   },
   {
     "id": 9,
@@ -187,7 +203,7 @@
     "parking": 1,
     "area": 132,
     "plot": 260,
-    "occupancy": "Por confirmar",
+    "occupancy": "Arrendada",
     "start": 1793413778309,
     "end": 1793618978309,
     "people": 0,
@@ -197,7 +213,9 @@
     "condition": "Próxima",
     "description": "Texto ilustrativo. Una publicación aprobada indicará claramente qué está confirmado y qué está pendiente de validar.",
     "appraisalUF": 6800,
-    "mortgage": true
+    "mortgage": true,
+    "connectivity": "Metro Irarrázaval (L3 y L5) a 6 min caminando. Ciclovía y buses en Av. Irarrázaval.",
+    "appreciation": "4,0 % anual estimada"
   },
   {
     "id": 10,
@@ -220,7 +238,9 @@
     "description": "Propiedad y ubicación de demostración. En el sitio publicado, la ubicación pública puede ser aproximada para resguardar la privacidad.",
     "appraisalUF": 6500,
     "mortgage": false,
-    "slug": "cabana-rodeada-de-vegetacion-nativa-pucon-10"
+    "slug": "cabana-rodeada-de-vegetacion-nativa-pucon-10",
+    "connectivity": "A 10 min del centro de Pucón por camino pavimentado. Aeródromo a 15 min.",
+    "appreciation": "4,5 % anual estimada"
   },
   {
     "id": 11,
@@ -242,7 +262,9 @@
     "condition": "Próxima",
     "description": "Ejemplo de ficha de oficina con distribución, superficies y datos de uso. No representa una oportunidad real.",
     "appraisalUF": 4150,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Los Leones (L1 y L6) a 5 min. Acceso rápido a Costanera Norte.",
+    "appreciation": "5,0 % anual estimada"
   },
   {
     "id": 12,
@@ -264,7 +286,9 @@
     "condition": "Próxima",
     "description": "Demostración de cómo la galería, el estado reportado y los antecedentes se muestran en una sola ficha.",
     "appraisalUF": 11600,
-    "mortgage": true
+    "mortgage": true,
+    "connectivity": "Buena conectividad con transporte público y vías principales de la comuna.",
+    "appreciation": "3,0 % anual estimada"
   },
   {
     "id": 13,
@@ -276,7 +300,7 @@
     "parking": 2,
     "area": 155,
     "plot": 720,
-    "occupancy": "Por confirmar",
+    "occupancy": "Arrendada",
     "start": 1793791778309,
     "end": 1793996978309,
     "people": 0,
@@ -286,7 +310,9 @@
     "condition": "Próxima",
     "description": "Imagen ilustrativa. No constituye una publicación ni certifica características de una propiedad real.",
     "appraisalUF": 7300,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "A 10 min de Limache por camino pavimentado. Acceso a Ruta 62.",
+    "appreciation": "4,2 % anual estimada"
   },
   {
     "id": 14,
@@ -308,7 +334,9 @@
     "condition": "Próxima",
     "description": "Los atributos y valores de esta tarjeta se usan solo para representar el diseño del prototipo.",
     "appraisalUF": 2350,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Universidad de Chile (L1 y L3) a 3 min. Múltiples recorridos de buses.",
+    "appreciation": "5,5 % anual estimada"
   },
   {
     "id": 15,
@@ -330,7 +358,9 @@
     "condition": "Próxima",
     "description": "La ficha real mostrará el alcance de la revisión legal, las bases y los documentos disponibles.",
     "appraisalUF": 5500,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Los Leones (L1 y L6) a 5 min. Acceso rápido a Costanera Norte.",
+    "appreciation": "3,5 % anual estimada"
   },
   {
     "id": 16,
@@ -352,7 +382,9 @@
     "condition": "Próxima",
     "description": "Ficha de muestra para el catálogo de propiedades. El precio y la información legal no corresponden a una publicación real.",
     "appraisalUF": 11600,
-    "mortgage": true
+    "mortgage": true,
+    "connectivity": "Acceso a Costanera Norte por Av. La Dehesa. Buses a Metro Manquehue.",
+    "appreciation": "4,0 % anual estimada"
   },
   {
     "id": 17,
@@ -364,7 +396,7 @@
     "parking": 1,
     "area": 91,
     "plot": null,
-    "occupancy": "Por confirmar",
+    "occupancy": "Arrendada",
     "start": 1794295778309,
     "end": 1794500978309,
     "people": 0,
@@ -374,7 +406,9 @@
     "condition": "Próxima",
     "description": "Muestra de ficha; no hay disponibilidad de visita real asociada a esta imagen.",
     "appraisalUF": 5250,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Santa Lucía (L1) a 7 min. Varios recorridos de buses.",
+    "appreciation": "4,5 % anual estimada"
   },
   {
     "id": 18,
@@ -396,7 +430,9 @@
     "condition": "Próxima",
     "description": "La persona puede consultar la ficha completa, sin iniciar sesión. Las acciones de participación requieren una cuenta habilitada.",
     "appraisalUF": 8300,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Escuela Militar (L1) a 8 min. Acceso a Costanera Norte y Kennedy.",
+    "appreciation": "5,0 % anual estimada"
   },
   {
     "id": 19,
@@ -418,7 +454,9 @@
     "condition": "Próxima",
     "description": "Datos de demostración. La publicación real muestra la fuente y fecha de actualización de los atributos cuando corresponda.",
     "appraisalUF": 5450,
-    "mortgage": true
+    "mortgage": true,
+    "connectivity": "Metro Bellavista de La Florida (L5) a 6 min. Acceso a Vicuña Mackenna.",
+    "appreciation": "3,0 % anual estimada"
   },
   {
     "id": 20,
@@ -440,6 +478,8 @@
     "condition": "Próxima",
     "description": "En esta ficha demostrativa puedes revisar estructura y navegación. No hay inmueble real asociado a este contenido.",
     "appraisalUF": 5950,
-    "mortgage": false
+    "mortgage": false,
+    "connectivity": "Metro Macul (L4) a 7 min. Acceso a Américo Vespucio.",
+    "appreciation": "4,2 % anual estimada"
   }
 ]

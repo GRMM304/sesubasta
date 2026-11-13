@@ -32,7 +32,9 @@ function resetDemo(d,now=Date.now()){
   d.subastas.auctions[aid]=a;
   // Garantía de seriedad de Dirección (nov. 2026): $1.000.000 por propiedad (la de prueba de $5.000 se mantiene).
   if(p.conditions?.guaranteeCLP===5000000)p.conditions.guaranteeCLP=1000000;
-  Object.assign(p,{title:r.title,appraisalUF:r.appraisalUF??null,mortgage:r.mortgage===true,conditions:{...p.conditions,opensAt:start,closesAt:end,initialUF:r.minUF,incrementUF:50},reviewStatus:'approved',publicStatus:'published',updatedAt:now});
+  // Documentos públicos de muestra (tasación, GP, bases y condiciones) y los privados que ya tenía.
+  p.documents=[...(p.documents||[]).filter(x=>x.visibility!=='public'),...demoDocs(p.id,now)];
+  Object.assign(p,{title:r.title,occupancy:r.occupancy,connectivity:r.connectivity||'',appreciation:r.appreciation||'',appraisalUF:r.appraisalUF??null,mortgage:r.mortgage===true,conditions:{...p.conditions,opensAt:start,closesAt:end,initialUF:r.minUF,incrementUF:50},reviewStatus:'approved',publicStatus:'published',updatedAt:now});
   p.live=D.publicFields(p)});
  d.attempts=d.attempts.filter(x=>!ids.has(String(x.auctionId)));
  for(const aid of ids)delete d.awards[aid];
@@ -42,4 +44,11 @@ function resetDemo(d,now=Date.now()){
  if(withGuarantee&&d.users.some(u=>u.id==='alex'))d.guarantees.push({id:'gar_demo1',code:'GAR-DEMO0001',userId:'alex',propertyId:withGuarantee.id,auctionId:withGuarantee.auctionId,amountCLP:withGuarantee.conditions.guaranteeCLP,status:'confirmed',refundAccount:{holder:'Alex Demo',rut:'11111111-1',bank:'Banco Estado',accountType:'Cuenta vista / RUT',number:'11111111'},termsVersion:d.config.termsVersion,createdAt:now,reportedAt:now,operation:'DEMO-123',confirmedBy:'usr_oper',confirmedAt:now,depositRef:'Cartola demo',history:[{from:'reported',to:'confirmed',by:'usr_oper',reason:'Ingreso verificado · Cartola demo',at:now}]});
  D.audit(d,'system','demo.reset','auction','demo',{auctions:ids.size,reason:'Subastas de prueba disponibles otra vez'});
  return ids.size}
-module.exports={resetDemo,demoPlan,applyPlan};
+/* Documentos públicos de muestra (nov. 2026): tasación, certificado de prohibiciones y gravámenes (GP) y bases y condiciones.
+   Sus archivos se generan al pedirlos (clave demo-doc:tipo:id), así no ocupan almacenamiento. */
+const DEMO_DOCS=[['tasacion','Tasación','Informe de tasación (demostración).pdf'],['gp','Certificado de prohibiciones y gravámenes','Certificado de hipotecas, gravámenes y prohibiciones (demostración).pdf'],['bases','Bases y condiciones','Bases y condiciones de la oportunidad (demostración).pdf']];
+function demoDocs(id,now=Date.now()){return DEMO_DOCS.map(([k,type,name])=>({id:`doc_${k}_${id}`,key:`demo-doc:${k}:${id}`,name,type,visibility:'public',uploadedBy:'usr_legal',at:now,mime:'application/pdf'}))}
+function demoDocPdf(key){const [,k,id]=String(key).split(':');const r=ROWS().find(x=>String(x.id)===id);const t=DEMO_DOCS.find(x=>x[0]===k);if(!r||!t)return null;const {makePdf}=require('./semilla.cjs');
+ const lines={tasacion:[`Propiedad: ${r.title}`,`Valor de tasacion: ${r.appraisalUF} UF`,'Tasacion ilustrativa de demostracion.'],gp:[`Propiedad: ${r.title}`,'Sin hipotecas, gravamenes ni prohibiciones vigentes (demostracion).','Documento ficticio sin validez legal.'],bases:[`Propiedad: ${r.title}`,`Precio inicial: ${r.minUF} UF. Incremento: 50 UF. Unidad contractual: UF.`,'Garantia de seriedad por propiedad. Cierre fijo sin extension automatica.','Si ganas, tienes 48 horas para pagar los gastos operacionales.','Documento ficticio. No tiene validez legal.']}[k];
+ return makePdf(`${t[1]} - documento de demostracion`,lines)}
+module.exports={resetDemo,demoPlan,applyPlan,demoDocs,demoDocPdf};

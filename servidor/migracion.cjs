@@ -3,7 +3,7 @@ const D=require('./dominio.cjs');
 const T=require('./terminologia.cjs');
 const {resetDemo}=require('./demo.cjs');
 const {addExtraBlog,applyLongBodies}=require('./blog-extra.cjs');
-const DEMO_RESET=3;
+const DEMO_RESET=4;
 /* Preguntas frecuentes anteriores a nov. 2026 (decían que no hay inscripción por propiedad). */
 const OLD_FAQS=[
  ['¿Necesito inscribirme en cada remate?','No. Con una cuenta de comprador activa y tu correo verificado puedes ofertar en cualquier propiedad abierta.'],
@@ -46,7 +46,8 @@ function migrate(d){
   c.copyVersion=1}
  // Reinicio de las subastas de prueba: 1 (27 oct. 2026) tarjetas con tasación; 2 (nov. 2026) subastas de a una,
  // horas exactas, títulos con la dirección y crédito hipotecario solo en algunas; 3 (nov. 2026) precios iniciales
- // entre 30 % y 35 % bajo tasación y garantía de seriedad de $1.000.000.
+ // entre 30 % y 35 % bajo tasación y garantía de seriedad de $1.000.000; 4 (nov. 2026) ocupación ocupada / desocupada /
+ // arrendada, conectividad, plusvalía estimada y documentos de tasación, GP y bases.
  // Para repetirlo, sube DEMO_RESET y publica.
  if((d.config.demoResetVersion||0)<DEMO_RESET){resetDemo(d);d.config.demoResetVersion=DEMO_RESET}
  // Prueba del flujo de garantía pedida por Dirección (27 oct. 2026): "Casa urbana con jardín y terraza" (SS-0020) exige $5.000.
