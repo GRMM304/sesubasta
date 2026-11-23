@@ -28,7 +28,7 @@ function createApp({store,api,seo,getTemplate,getAsset,siteUrl}){
     if(pathname==='/api/health')return json(200,{mode:'local-demo',serverNow:Date.now()});
     const out=await api.handle(ctx);
     if(!out)return json(404,{code:'NOT_FOUND',message:'Ruta no disponible.'},cookies);
-    if(out.raw){const f=out.result.file;const bytes=store.readFile(f.visibility,f.key);if(!bytes)return json(404,{code:'NOT_FOUND',message:'Archivo no disponible.'},cookies);return fileResponse(bytes,{mime:f.mime,name:f.name,inline:f.inline||f.mime==='application/pdf',cache:'private, no-store',noindex:true},cookies)}
+    if(out.raw){const f=out.result.file;const bytes=store.readFile(f.visibility,f.key)||(String(f.key).startsWith('demo-doc:')?require('./demo.cjs').demoDocPdf(f.key):null);if(!bytes)return json(404,{code:'NOT_FOUND',message:'Archivo no disponible.'},cookies);return fileResponse(bytes,{mime:f.mime,name:f.name,inline:f.inline||f.mime==='application/pdf',cache:'private, no-store',noindex:true},cookies)}
     return json(200,out.result,cookies)}
    if(method!=='GET'&&method!=='HEAD')return json(405,{code:'METHOD',message:'Método no permitido.'});
    if(pathname==='/robots.txt')return respond(200,seo.robots(base),{'Content-Type':TYPES.txt});
