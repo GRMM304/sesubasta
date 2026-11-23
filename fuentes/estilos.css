@@ -227,7 +227,7 @@ body[data-area=staff] .demo-banner{background:#2a1c6b;color:#E8E4F7;border-color
 .current-price{display:block;font-family:var(--font-title);font-size:36px;font-weight:800;line-height:1.1;color:var(--navy);white-space:nowrap}
 .card-countdown{display:flex;align-items:center;gap:8px;font-family:var(--font-title);font-weight:800;font-size:18px;color:var(--violet);margin:14px 0 2px;font-variant-numeric:tabular-nums}.card-countdown .ico{width:24px;height:24px;color:var(--navy)}
 .participants{color:var(--muted);font-size:13px;margin:0}
-.card-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:auto;padding-top:12px}
+.card-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:auto;padding-top:12px}
 .card-facts{list-style:none;margin:8px 0 0;padding:0 0 10px;display:flex;flex-wrap:nowrap;gap:14px;border-bottom:1px solid var(--line);color:var(--navy);font-size:14px;font-weight:600}
 .card-facts li{display:flex;align-items:center;gap:5px;min-width:0;flex:none}.card-facts li:first-child{flex:0 1 auto}.card-facts li>span:first-of-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .card-facts .ico{flex:none;width:18px;height:18px;color:var(--violet)}
@@ -248,7 +248,7 @@ body[data-area=staff] .demo-banner{background:#2a1c6b;color:#E8E4F7;border-color
 .top-bids li{counter-increment:top;display:flex;align-items:center;gap:8px;background:var(--cloud);border-radius:8px;padding:5px 8px;font-size:12px;color:var(--muted)}
 .top-bids li:before{content:counter(top);display:grid;place-items:center;flex:none;width:20px;height:20px;border-radius:6px;background:var(--navy);color:var(--lime);font-family:var(--font-title);font-weight:800;font-size:12px}
 .top-bids strong{color:var(--navy);font-size:14px;margin-right:auto}
-.property-card .card-actions .btn{min-height:42px;font-size:12.5px;padding:0 4px;white-space:nowrap;letter-spacing:-.01em}
+.property-card .card-actions .btn{min-height:42px;font-size:14px;padding:0 6px;white-space:nowrap;letter-spacing:-.01em}
 .property-card [data-live-cta].btn-primary{background:var(--lime);color:var(--navy)}.property-card [data-live-cta].btn-primary:hover{background:#b8f21f;color:var(--navy)}
 #credito h2 .ico{width:26px;height:26px;vertical-align:-5px;color:var(--violet)}
 
@@ -639,7 +639,7 @@ a.staff-who{color:#fff;text-decoration:none}
 .footer .intranet-btn,.footer .intranet-btn:hover{color:var(--navy)}
 /* Tarjeta angosta: los 3 botones siguen en una fila y el texto pasa a dos renglones. */
 .property-card{container-type:inline-size}
-@container (max-width:380px){.property-card .card-actions .btn{white-space:normal;line-height:1.15;font-size:12px;text-align:center}}
+.card-actions .btn-primary{grid-column:1/-1}
 
 /* ---------- blog: banners deslizantes y buscador por categoría ---------- */
 .blog-slider-wrap{padding-top:8px}
