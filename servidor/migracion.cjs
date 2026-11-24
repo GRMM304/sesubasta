@@ -1,5 +1,6 @@
 /* Ajustes de datos al iniciar, para archivos creados con versiones anteriores del prototipo. */
 const D=require('./dominio.cjs');
+const S=require('./seguridad.cjs');
 const T=require('./terminologia.cjs');
 const {resetDemo}=require('./demo.cjs');
 const {addExtraBlog,applyLongBodies}=require('./blog-extra.cjs');
@@ -63,6 +64,15 @@ function migrate(d){
   if(c.homeLead==='Explora propiedades, revisa sus antecedentes y oferta hasta el cierre. Sin inscripción por propiedad.')c.homeLead='Propiedades entre un 30 % y un 35 % bajo el valor de tasación. Revisa sus antecedentes y oferta hasta el cierre.';
   if(c.how&&c.how.purpose===T2.apply('Remates Dinámicos ordena la información de cada propiedad y registra cada oferta con hora oficial del servidor para que la competencia sea transparente.'))c.how.purpose='SeSubasta ordena la información de cada propiedad y registra cada oferta con hora oficial del servidor para que la competencia sea transparente.';
   c.copyVersion=2}
+ // Primer Administrador general real (nov. 2026), pedido por Dirección: con el modo producción las cuentas demo ya no
+ // reciben su código de acceso. Se invita una sola vez; el enlace vence en 72 horas y se puede reenviar desde Equipo.
+ if(!d.config.adminInvite1){const email='cinostroza@arkho.io';
+  if(!d.users.some(u=>u.emailNorm===email)){const now=Date.now(),token=S.randomToken();
+   const nu={id:S.id('usr'),email,emailNorm:email,name:'C. Inostroza',phone:'',whatsapp:'',position:'Administración general',area:'Dirección',accountType:'internal',status:'pending',emailVerifiedAt:null,passHash:'',roles:['general_admin'],mfa:true,prefs:{notifyEmail:true},invitedAt:now,invitedBy:'system',createdAt:now,updatedAt:now};
+   d.users.push(nu);d.tokens.push({hash:S.digest(token),type:'invite',userId:nu.id,exp:now+72*3600000,used:false});
+   D.mail(d,{to:email,template:'equipo_invitacion',subject:'Invitación al equipo de SeSubasta',title:'Hola, te damos la bienvenida',details:[{etiqueta:'Rol',valor:D.ROLE_LABELS.general_admin},{etiqueta:'Cargo',valor:nu.position}],body:'Dirección de SeSubasta te creó una cuenta en el panel del equipo.\nActiva tu cuenta y crea tu contraseña. El enlace vence en 72 horas.',link:`/admin-login/invitacion?token=${token}`,cta:'Activar mi cuenta',category:'staff'});
+   D.audit(d,'system','user.create_staff','user',nu.id,{roles:nu.roles,reason:'Primer Administrador general real'})}
+  d.config.adminInvite1=true}
  for(const m of d.mail){delete m.html;delete m.text}
 }
 module.exports={migrate,SOCIAL};

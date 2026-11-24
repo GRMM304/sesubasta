@@ -7,7 +7,7 @@ const {HttpError}=require('./api.cjs');
 
 const TYPES={html:'text/html; charset=utf-8',png:'image/png',webp:'image/webp',jpg:'image/jpeg',jpeg:'image/jpeg',svg:'image/svg+xml',ttf:'font/ttf',ico:'image/x-icon',pdf:'application/pdf',txt:'text/plain; charset=utf-8',xml:'application/xml; charset=utf-8',json:'application/json; charset=utf-8'};
 const typeOf=name=>TYPES[String(name).split('.').pop().toLowerCase()]||'application/octet-stream';
-const SECURITY={'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','X-Frame-Options':'SAMEORIGIN','Permissions-Policy':'camera=(), microphone=(), geolocation=()',
+const SECURITY={'Strict-Transport-Security':'max-age=15552000','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','X-Frame-Options':'SAMEORIGIN','Permissions-Policy':'camera=(), microphone=(), geolocation=()',
  'Content-Security-Policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com; connect-src 'self' ws: wss: https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; font-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"};
 
 function respond(status,body,headers={},cookies=[]){const h=new Headers({...SECURITY,...headers});for(const c of cookies)h.append('Set-Cookie',c);return new Response(body,{status,headers:h})}
@@ -17,7 +17,7 @@ function fileResponse(bytes,{mime,name,inline=true,cache='no-cache',noindex=fals
 function createApp({store,api,seo,getTemplate,getAsset,siteUrl}){
  async function handle(request,{ip='local'}={}){const requestId=crypto.randomUUID();let url;try{url=new URL(request.url)}catch{return json(400,{code:'BAD_REQUEST',message:'Dirección no válida.'})}
   let pathname;try{pathname=decodeURIComponent(url.pathname)}catch{return json(400,{code:'BAD_REQUEST',message:'Dirección no válida.'})}
-  const proto=request.headers.get('x-forwarded-proto')||url.protocol.replace(':','');const base=siteUrl||`${proto}://${url.host}`;Mail.setBase(base);
+  const proto=url.protocol==='https:'?'https':request.headers.get('x-forwarded-proto')==='https'?'https':'http';const base=siteUrl||`${proto}://${url.host}`;Mail.setBase(base);
   const method=request.method,cookies=[];
   const ctx={req:{headers:Object.fromEntries([...request.headers].map(([k,v])=>[k.toLowerCase(),v]))},method,path:pathname,query:Object.fromEntries(url.searchParams),cookies:S.parseCookies(request.headers.get('cookie')),ip,secure:proto==='https',origin:base,requestId,setCookie:c=>cookies.push(c),
    readBody:async max=>{const declared=Number(request.headers.get('content-length')||0);if(declared>max)throw new HttpError(413,'TOO_LARGE','La solicitud es demasiado grande.');const text=await request.text();if(text.length>max)throw new HttpError(413,'TOO_LARGE','La solicitud es demasiado grande.');if(!text)return {};try{const v=JSON.parse(text);if(!v||typeof v!=='object'||Array.isArray(v))throw 0;return v}catch{throw new HttpError(400,'VALIDATION_ERROR','Solicitud no válida.')}}};
